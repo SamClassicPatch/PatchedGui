@@ -16,6 +16,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "StdH.h"
 #include <Engine/Templates/Stock_CTextureData.h>
 
+// [Cecil] Extra functionality
+#include "Cecil/CecilExtensions.h"
+
 // global engine gui handling object
 CEngineGUI _EngineGUI;
 
@@ -234,6 +237,7 @@ CTFileName CEngineGUI::CreateTexture(CTFileName fnTexFileToRecreate, CDynamicArr
 
 // Functions used by application for getting and setting registry keys concerning modes
 
+// [Cecil] NOTE: This method is called after initializing the engine in Serious Editor
 void CEngineGUI::GetFullScreenModeFromRegistry(CTString strSectionName, CDisplayMode &dm, GfxAPIType &gat)
 {
   // prepare full screen mode as default
@@ -256,6 +260,9 @@ void CEngineGUI::GetFullScreenModeFromRegistry(CTString strSectionName, CDisplay
 #else // SE1_D3D
   gat = GAT_OGL;
 #endif // SE1_D3D
+
+  // [Cecil] Custom initialization
+  CECIL_Init();
 }
 
 void CEngineGUI::SetFullScreenModeToRegistry(CTString strSectionName, CDisplayMode dm, GfxAPIType gat)

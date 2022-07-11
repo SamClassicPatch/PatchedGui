@@ -16,6 +16,12 @@
     <Filter Include="Wizard Files">
       <UniqueIdentifier>{43491365-8482-4361-90a0-59df05280571}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Cecil">
+      <UniqueIdentifier>{e88eba89-13f9-4494-bebc-0cbf27c7ce8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Cecil headers">
+      <UniqueIdentifier>{5d6f2390-4d20-407b-a9a3-5965e78f80dc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DlgChooseTextureType.cpp">
@@ -45,6 +51,9 @@
     <ClCompile Include="WndDisplayTexture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Cecil\CecilExtensions.cpp">
+      <Filter>Source Files\Cecil</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DlgChooseTextureType.h">
@@ -73,6 +82,9 @@
     </ClInclude>
     <ClInclude Include="WndDisplayTexture.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Cecil\CecilExtensions.h">
+      <Filter>Header Files\Cecil headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
