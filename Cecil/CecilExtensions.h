@@ -21,7 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #endif
 
 // Custom initialization for all tools
-void CECIL_InitTools(void);
+void CECIL_InitTools(BOOL bEditor);
 
 // Custom initialization for Serious Editor
 void CECIL_InitEditor(void);
