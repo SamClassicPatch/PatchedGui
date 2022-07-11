@@ -94,3 +94,6 @@ class CEngineGUI
 
 // global engine gui handling object
 ENGINEGUI_API extern CEngineGUI _EngineGUI;
+
+// [Cecil] Extra functionality
+#include "Cecil/CecilExtensions.h"

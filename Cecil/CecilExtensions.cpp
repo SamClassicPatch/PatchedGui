@@ -15,6 +15,15 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "StdH.h"
 
+// Custom initialization for all tools
+void CECIL_InitTools(void) {
+  // Initialize the core
+  CECIL_InitCore();
+
+  // Load needed plugins
+  _pCoreAPI->LoadPlugins(CPluginAPI::PF_TOOLS);
+};
+
 // Original function pointer
 static CGame *(*pGameCreateFunc)(void) = NULL;
 
@@ -32,8 +41,7 @@ static CGame *P_GameCreate(void) {
 
 // Custom initialization for Serious Editor
 void CECIL_InitEditor(void) {
-  // Initialize the core
-  CECIL_InitCore();
+  CECIL_InitTools();
 
   // Load Game library in advance
   const CTString strGameLib = _pCoreAPI->GetGameLibPath();
@@ -42,7 +50,4 @@ void CECIL_InitEditor(void) {
   // Patch game creation method to avoid creation of multiple instances of CGame
   pGameLib->GetSymbol_t(&pGameCreateFunc, "GAME_Create");
   NewPatch(pGameCreateFunc, &P_GameCreate, "GAME_Create()");
-
-  // Load needed plugins
-  _pCoreAPI->LoadPlugins(CPluginAPI::PF_TOOLS);
 };

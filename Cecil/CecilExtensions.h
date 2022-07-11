@@ -20,6 +20,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
   #pragma once
 #endif
 
+// Custom initialization for all tools
+void CECIL_InitTools(void);
+
 // Custom initialization for Serious Editor
 void CECIL_InitEditor(void);
 

@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Cecil\CecilExtensions.cpp" />
+    <ClCompile Include="Cecil\EnginePatch.cpp" />
     <ClCompile Include="DlgChooseTextureType.cpp" />
     <ClCompile Include="DlgCreateAnimatedTexture.cpp" />
     <ClCompile Include="DlgCreateEffectTexture.cpp" />

@@ -16,9 +16,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "StdH.h"
 #include <Engine/Templates/Stock_CTextureData.h>
 
-// [Cecil] Extra functionality
-#include "Cecil/CecilExtensions.h"
-
 // global engine gui handling object
 CEngineGUI _EngineGUI;
 
