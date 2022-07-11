@@ -30,7 +30,16 @@ static void P_InitEngine(CTString strGameID) {
 
   // Running Serious Modeler or Serious SKA Studio
   if (strGameID == "") {
+    // Mark as a modeler application
+    CCoreAPI::SetApplication(CCoreAPI::APP_MODELER);
+
+    // Initialize the tools
     CECIL_InitTools();
+
+  // Running Serious Editor
+  } else if (strGameID == "SeriousEditor") {
+    // Mark as an editor application
+    CCoreAPI::SetApplication(CCoreAPI::APP_EDITOR);
   }
 
   // Unpatch initialization method
