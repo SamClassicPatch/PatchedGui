@@ -30,21 +30,18 @@ static CGame *P_GameCreate(void) {
   return _pGame;
 };
 
-// Custom initialization
-void CECIL_Init(void) {
+// Custom initialization for Serious Editor
+void CECIL_InitEditor(void) {
   // Initialize the core
   CECIL_InitCore();
 
-  // Editor-specific
-  if (_bWorldEditorApp) {
-    // Load Game library in advance
-    const CTString strGameLib = _pCoreAPI->GetGameLibPath();
-    CPluginModule *pGameLib = GetPluginAPI()->LoadPlugin_t(strGameLib);
+  // Load Game library in advance
+  const CTString strGameLib = _pCoreAPI->GetGameLibPath();
+  CPluginModule *pGameLib = GetPluginAPI()->LoadPlugin_t(strGameLib);
 
-    // Patch game creation method to avoid creation of multiple instances of CGame
-    pGameLib->GetSymbol_t(&pGameCreateFunc, "GAME_Create");
-    NewPatch(pGameCreateFunc, &P_GameCreate, "GAME_Create()");
-  }
+  // Patch game creation method to avoid creation of multiple instances of CGame
+  pGameLib->GetSymbol_t(&pGameCreateFunc, "GAME_Create");
+  NewPatch(pGameCreateFunc, &P_GameCreate, "GAME_Create()");
 
   // Load needed plugins
   _pCoreAPI->LoadPlugins(CPluginAPI::PF_TOOLS);
