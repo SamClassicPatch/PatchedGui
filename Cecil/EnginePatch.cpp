@@ -62,9 +62,19 @@ static const struct LibInit {
   {
     // Patch engine methods
     pInitEngineFunc = &SE_InitEngine;
-    _pInitEnginePatch = NewPatch(pInitEngineFunc, &P_InitEngine, "SE_InitEngine()", FALSE);
+    _pInitEnginePatch = new CPatch(pInitEngineFunc, &P_InitEngine, true, false);
+
+    // Couldn't patch
+    if (!_pInitEnginePatch->IsValid()) {
+      PATCH_ERROR_OUTPUT("Cannot set function patch for SE_InitEngine()!\nAddress: 0x%p", pInitEngineFunc);
+    }
 
     pEndEngineFunc = &SE_EndEngine;
-    _pEndEnginePatch = NewPatch(pEndEngineFunc, &P_EndEngine, "SE_EndEngine()", FALSE);
+    _pEndEnginePatch = new CPatch(pEndEngineFunc, &P_EndEngine, true, false);
+
+    // Couldn't patch
+    if (!_pEndEnginePatch->IsValid()) {
+      PATCH_ERROR_OUTPUT("Cannot set function patch for SE_EndEngine()!\nAddress: 0x%p", pEndEngineFunc);
+    }
   };
 } _libInit;
