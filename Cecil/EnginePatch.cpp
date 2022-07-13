@@ -34,7 +34,7 @@ static void P_InitEngine(CTString strGameID) {
     CCoreAPI::SetApplication(CCoreAPI::APP_MODELER);
 
     // Initialize the tools
-    CECIL_InitTools(FALSE);
+    CECIL_InitTools();
 
   // Running Serious Editor
   } else if (strGameID == "SeriousEditor") {

@@ -15,13 +15,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "StdH.h"
 
-// Custom initialization for all tools
-void CECIL_InitTools(BOOL bEditor) {
+// Custom initialization for other tools
+void CECIL_InitTools(void) {
   // Initialize the core
   CECIL_InitCore();
 
   // Load needed plugins
-  _pCoreAPI->LoadPlugins(bEditor ? CPluginAPI::PF_EDITOR : CPluginAPI::PF_TOOLS);
+  _pCoreAPI->LoadPlugins(CPluginAPI::PF_TOOLS);
 };
 
 // Original function pointer
@@ -35,13 +35,17 @@ static CGame *P_GameCreate(void) {
   // Hook default fields
   GetGameAPI()->HookFields();
 
+  // Load needed plugins after the Game library
+  _pCoreAPI->LoadPlugins(CPluginAPI::PF_EDITOR);
+
   // Return it
   return _pGame;
 };
 
 // Custom initialization for Serious Editor
 void CECIL_InitEditor(void) {
-  CECIL_InitTools(TRUE);
+  // Initialize the core
+  CECIL_InitCore();
 
   // Load Game library in advance
   const CTString strGameLib = _pCoreAPI->GetGameLibPath();
