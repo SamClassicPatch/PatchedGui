@@ -21,7 +21,7 @@ void CECIL_InitTools(void) {
   CECIL_InitCore();
 
   // Load needed plugins
-  _pCoreAPI->LoadPlugins(CPluginAPI::PF_TOOLS);
+  GetAPI()->LoadPlugins(CPluginAPI::PF_TOOLS);
 };
 
 // Original function pointer
@@ -36,7 +36,7 @@ static CGame *P_GameCreate(void) {
   GetGameAPI()->HookFields();
 
   // Load needed plugins after the Game library
-  _pCoreAPI->LoadPlugins(CPluginAPI::PF_EDITOR);
+  GetAPI()->LoadPlugins(CPluginAPI::PF_EDITOR);
 
   // Return it
   return _pGame;
@@ -48,7 +48,7 @@ void CECIL_InitEditor(void) {
   CECIL_InitCore();
 
   // Load Game library in advance
-  const CTString strGameLib = _pCoreAPI->GetGameLibPath();
+  const CTString strGameLib = GetAPI()->GetGameLibPath();
   CPluginModule *pGameLib = GetPluginAPI()->LoadPlugin_t(strGameLib);
 
   // Patch game creation method to avoid creation of multiple instances of CGame
