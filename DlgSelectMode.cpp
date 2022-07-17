@@ -259,7 +259,7 @@ void CDlgSelectMode::DoDataExchange(CDataExchange *pDX)
     m_ctrlResCombo.ResetContent();
 
     // init driver combo
-    i = m_ctrlDriverCombo.AddString("OpenGL");
+    i = m_ctrlDriverCombo.AddString(_T("OpenGL"));
     m_ctrlDriverCombo.SetItemData(i, (INDEX)GAT_OGL);
 
     if (*m_pGfxAPI == GAT_OGL) {
@@ -267,7 +267,7 @@ void CDlgSelectMode::DoDataExchange(CDataExchange *pDX)
     }
 
 #ifdef SE1_D3D
-    i = m_ctrlDriverCombo.AddString("Direct3D");
+    i = m_ctrlDriverCombo.AddString(_T("Direct3D"));
     m_ctrlDriverCombo.SetItemData(i, (INDEX)GAT_D3D);
     if (*m_pGfxAPI == GAT_D3D) {
       iSelect = i;
@@ -340,7 +340,7 @@ void CDlgSelectMode::OnTestButton()
   BOOL bDisplayModeSet = _pGfx->SetDisplayMode(GAT_OGL, 0, pixSizeI, pixSizeJ, dm.dm_ddDepth);
 
   if (!bDisplayModeSet) {
-    AfxMessageBox("Unable to setup full screen display. Test mode failed.");
+    AfxMessageBox(_T("Unable to setup full screen display. Test mode failed."));
     return;
   }
 
@@ -355,8 +355,8 @@ void CDlgSelectMode::OnTestButton()
   int iScreenY = ::GetSystemMetrics(SM_CYSCREEN);
 
   // open window of display mode size
-  const char *strWindowClass = AfxRegisterWndClass(CS_OWNDC | CS_NOCLOSE);
-  wndTestWindowedMode.CreateEx(WS_EX_TOPMOST, strWindowClass, "Test mode",
+  const TCHAR *strWindowClass = AfxRegisterWndClass(CS_OWNDC | CS_NOCLOSE);
+  wndTestWindowedMode.CreateEx(WS_EX_TOPMOST, strWindowClass, _T("Test mode"),
                                WS_POPUP | WS_VISIBLE, 0, 0, iScreenX, iScreenY, m_hWnd, 0);
 
   // create window canvas
@@ -364,7 +364,7 @@ void CDlgSelectMode::OnTestButton()
 
   // if screen or window opening was not successful
   if (pViewPort == NULL) {
-    AfxMessageBox("Unable to setup full screen display. Test mode failed.");
+    AfxMessageBox(_T("Unable to setup full screen display. Test mode failed."));
     return;
   }
 
@@ -398,10 +398,10 @@ void CDlgSelectMode::OnTestButton()
   // restore old mode
   _pGfx->ResetDisplayMode();
 
-  if (AfxMessageBox("Did You see displayed message correctly?", MB_YESNO) == IDYES) {
+  if (AfxMessageBox(_T("Did You see displayed message correctly?"), MB_YESNO) == IDYES) {
     GetDlgItem(IDOK)->SetFocus(); // set focus to apply button
   } else {
-    AfxMessageBox("Mode is not valid and it is rejected. Choose another one.");
+    AfxMessageBox(_T("Mode is not valid and it is rejected. Choose another one."));
   }
 
   Invalidate(FALSE);

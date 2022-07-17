@@ -59,7 +59,7 @@ void CDlgCreateAnimatedTexture::InitAnimationsCombo(void)
     }
 
   } else {
-    m_ctrlAnimationsCombo.AddString("None");
+    m_ctrlAnimationsCombo.AddString(_T("None"));
   }
 
   m_ctrlAnimationsCombo.SetCurSel(0);

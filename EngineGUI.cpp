@@ -243,14 +243,19 @@ void CEngineGUI::GetFullScreenModeFromRegistry(CTString strSectionName, CDisplay
   dm.dm_ddDepth = DD_DEFAULT;
 
   // read FS parameters from registry
-  CTString strResult = CString(AfxGetApp()->GetProfileStringA(CString(strSectionName), "Full screen mode", "640 x 480 x 0"));
-  strResult.ScanF("%d x %d x %d", &dm.dm_pixSizeI, &dm.dm_pixSizeJ, &dm.dm_ddDepth);
+  CString strResult = AfxGetApp()->GetProfileString(CString(strSectionName), _T("Full screen mode"), _T("640 x 480 x 0"));
+
+  #ifdef UNICODE
+    swscanf(strResult, _T("%d x %d x %d"), &dm.dm_pixSizeI, &dm.dm_pixSizeJ, &dm.dm_ddDepth);
+  #else
+    sscanf(strResult, _T("%d x %d x %d"), &dm.dm_pixSizeI, &dm.dm_pixSizeJ, &dm.dm_ddDepth);
+  #endif
 
   if (dm.dm_ddDepth < DD_DEFAULT || dm.dm_ddDepth > DD_32BIT) {
     dm.dm_ddDepth = DD_DEFAULT;
   }
 
-  strResult = CString(AfxGetApp()->GetProfileStringA(CString(strSectionName), "Full screen API", "OpenGL"));
+  strResult = AfxGetApp()->GetProfileString(CString(strSectionName), _T("Full screen API"), _T("OpenGL"));
 
 #ifdef SE1_D3D
   gat = (strResult == "Direct3D") ? GAT_D3D : GAT_OGL;
@@ -272,6 +277,6 @@ void CEngineGUI::SetFullScreenModeToRegistry(CTString strSectionName, CDisplayMo
   CTString strGAT = "OpenGL";
 #endif // SE1_D3D
 
-  AfxGetApp()->WriteProfileStringA(CString(strSectionName), "Full screen mode", CString(strDM));
-  AfxGetApp()->WriteProfileStringA(CString(strSectionName), "Full screen API", CString(strGAT));
+  AfxGetApp()->WriteProfileString(CString(strSectionName), _T("Full screen mode"), CString(strDM));
+  AfxGetApp()->WriteProfileString(CString(strSectionName), _T("Full screen API"), CString(strGAT));
 }

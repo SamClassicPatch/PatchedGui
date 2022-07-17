@@ -387,27 +387,27 @@ BOOL CDlgCreateEffectTexture::OnInitDialog()
 
   // fill width combo
   m_ctrlPixWidthCombo.ResetContent();
-  m_ctrlPixWidthCombo.AddString("1");
-  m_ctrlPixWidthCombo.AddString("2");
-  m_ctrlPixWidthCombo.AddString("4");
-  m_ctrlPixWidthCombo.AddString("8");
-  m_ctrlPixWidthCombo.AddString("16");
-  m_ctrlPixWidthCombo.AddString("32");
-  m_ctrlPixWidthCombo.AddString("64");
-  m_ctrlPixWidthCombo.AddString("128");
-  m_ctrlPixWidthCombo.AddString("256");
+  m_ctrlPixWidthCombo.AddString(_T("1"));
+  m_ctrlPixWidthCombo.AddString(_T("2"));
+  m_ctrlPixWidthCombo.AddString(_T("4"));
+  m_ctrlPixWidthCombo.AddString(_T("8"));
+  m_ctrlPixWidthCombo.AddString(_T("16"));
+  m_ctrlPixWidthCombo.AddString(_T("32"));
+  m_ctrlPixWidthCombo.AddString(_T("64"));
+  m_ctrlPixWidthCombo.AddString(_T("128"));
+  m_ctrlPixWidthCombo.AddString(_T("256"));
 
   // fill height combo
   m_ctrlPixHeightCombo.ResetContent();
-  m_ctrlPixHeightCombo.AddString("1");
-  m_ctrlPixHeightCombo.AddString("2");
-  m_ctrlPixHeightCombo.AddString("4");
-  m_ctrlPixHeightCombo.AddString("8");
-  m_ctrlPixHeightCombo.AddString("16");
-  m_ctrlPixHeightCombo.AddString("32");
-  m_ctrlPixHeightCombo.AddString("64");
-  m_ctrlPixHeightCombo.AddString("128");
-  m_ctrlPixHeightCombo.AddString("256");
+  m_ctrlPixHeightCombo.AddString(_T("1"));
+  m_ctrlPixHeightCombo.AddString(_T("2"));
+  m_ctrlPixHeightCombo.AddString(_T("4"));
+  m_ctrlPixHeightCombo.AddString(_T("8"));
+  m_ctrlPixHeightCombo.AddString(_T("16"));
+  m_ctrlPixHeightCombo.AddString(_T("32"));
+  m_ctrlPixHeightCombo.AddString(_T("64"));
+  m_ctrlPixHeightCombo.AddString(_T("128"));
+  m_ctrlPixHeightCombo.AddString(_T("256"));
 
   // initialize effect groups combo
   m_ctrlEffectClassCombo.ResetContent();
