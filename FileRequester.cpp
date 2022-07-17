@@ -217,14 +217,14 @@ CTFileName CEngineGUI::FileRequester(
   }
 
   // if directory is not inside engine dir
-  CTString strTest = CString(strRequestInDirectory);
+  CTString strTest = MfcStringToCT(strRequestInDirectory);
 
   if (!strTest.RemovePrefix(_fnmApplicationPath)) {
     // force it there
     strRequestInDirectory = _fnmApplicationPath;
   }
 
-  ofnRequestFiles.lpstrInitialDir = CString(strRequestInDirectory);
+  ofnRequestFiles.lpstrInitialDir = MfcStringToCT(strRequestInDirectory);
   ofnRequestFiles.lpstrTitle = pchrTitle;
   ofnRequestFiles.Flags = OFN_EXPLORER | OFN_ENABLEHOOK | OFN_ENABLETEMPLATE | OFN_HIDEREADONLY;
 

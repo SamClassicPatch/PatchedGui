@@ -89,7 +89,7 @@ void CDlgCreateAnimatedTexture::RefreshTexture(void)
     CTFileStream fileScript;
     fileScript.Create_t(fnTempScript);
 
-    CTString strEditScript = CString(m_strEditScript);
+    CTString strEditScript = MfcStringToCT(m_strEditScript);
     char *pScript = (char *)AllocMemory(strlen(strEditScript) + 1);
     strcpy(pScript, strEditScript);
 
@@ -271,7 +271,7 @@ void CDlgCreateAnimatedTexture::OnCreateTexture()
     }
 
   } else {
-    fnSaveName = CTString(CString(m_strCreatedTextureName));
+    fnSaveName = MfcStringToCT(m_strCreatedTextureName);
   }
 
   // set newly picked names for final script and texture

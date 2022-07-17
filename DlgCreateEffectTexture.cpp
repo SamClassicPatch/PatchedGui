@@ -489,7 +489,7 @@ void CDlgCreateEffectTexture::CreateTexture(void)
 void CDlgCreateEffectTexture::OnCreateAs()
 {
   // call save texture file requester
-  CTFileName fnNewTexName = _EngineGUI.BrowseTexture(CTString(CString(m_strCreatedTextureName)),
+  CTFileName fnNewTexName = _EngineGUI.BrowseTexture(MfcStringToCT(m_strCreatedTextureName),
     KEY_NAME_CREATE_TEXTURE_DIR, "Create texture as", FALSE);
 
   // if picked valid name
@@ -521,7 +521,7 @@ void CDlgCreateEffectTexture::OnCreate()
   } else {
     // save as final texture
     try {
-      m_fnCreatedTextureName = CTString(CString(m_strCreatedTextureName));
+      m_fnCreatedTextureName = MfcStringToCT(m_strCreatedTextureName);
       m_tdCreated.Save_t(m_fnCreatedTextureName);
 
     } catch (char *err_str) {

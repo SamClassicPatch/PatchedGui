@@ -26,4 +26,7 @@ void CECIL_InitTools(void);
 // Custom initialization for Serious Editor
 void CECIL_InitEditor(void);
 
+// Convert MFC's CString to CTString
+CTString MfcStringToCT(const CString &str);
+
 #endif
