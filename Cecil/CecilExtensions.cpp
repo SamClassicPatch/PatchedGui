@@ -20,6 +20,14 @@ void CECIL_InitTools(void) {
   // Initialize the core
   CECIL_InitCore();
 
+  // Function patches
+  CPrintF("--- Tools: Intercepting Engine functions ---\n");
+
+  extern void CECIL_ApplyModelRenderPatch(void);
+  CECIL_ApplyModelRenderPatch();
+
+  CPrintF("--- Done! ---\n");
+
   // Load needed plugins
   GetAPI()->LoadPlugins(CPluginAPI::PF_TOOLS);
 };

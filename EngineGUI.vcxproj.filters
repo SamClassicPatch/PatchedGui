@@ -57,6 +57,9 @@
     <ClCompile Include="Cecil\EnginePatch.cpp">
       <Filter>Source Files\Cecil</Filter>
     </ClCompile>
+    <ClCompile Include="Cecil\RenderPatch.cpp">
+      <Filter>Source Files\Cecil</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DlgChooseTextureType.h">
