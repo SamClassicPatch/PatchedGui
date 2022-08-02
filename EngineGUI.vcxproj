@@ -117,7 +117,7 @@
     <GenerateManifest>true</GenerateManifest>
     <EmbedManifest>true</EmbedManifest>
     <OutDir>$(BinDir)</OutDir>
-    <IntDir>$(ProjectDir)$(Configuration)\</IntDir>
+    <IntDir>$(ObjDir)</IntDir>
     <TargetName>EngineGUID</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_TSE107|Win32'">
@@ -127,7 +127,7 @@
     <GenerateManifest>true</GenerateManifest>
     <EmbedManifest>true</EmbedManifest>
     <OutDir>$(BinDir)</OutDir>
-    <IntDir>$(ProjectDir)$(Configuration)\</IntDir>
+    <IntDir>$(ObjDir)</IntDir>
     <TargetName>EngineGUI</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_TSE105|Win32'">
@@ -137,7 +137,7 @@
     <GenerateManifest>true</GenerateManifest>
     <EmbedManifest>true</EmbedManifest>
     <OutDir>$(BinDir)</OutDir>
-    <IntDir>$(ProjectDir)$(Configuration)\</IntDir>
+    <IntDir>$(ObjDir)</IntDir>
     <TargetName>EngineGUI</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_TFE105|Win32'">
@@ -147,7 +147,7 @@
     <GenerateManifest>true</GenerateManifest>
     <EmbedManifest>true</EmbedManifest>
     <OutDir>$(BinDir)</OutDir>
-    <IntDir>$(ProjectDir)$(Configuration)\</IntDir>
+    <IntDir>$(ObjDir)</IntDir>
     <TargetName>EngineGUI</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_TSE107|Win32'">
