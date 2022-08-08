@@ -4,7 +4,7 @@
 Version=1
 LastClass=CDlgCreateNormalTexture
 LastTemplate=generic CWnd
-NewFileInclude1=#include "stdafx.h"
+NewFileInclude1=#include "StdH.h"
 NewFileInclude2=#include "ctgfx.h"
 LastPage=0
 
