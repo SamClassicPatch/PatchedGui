@@ -27,6 +27,9 @@ void CECIL_InitTools(void);
 void CECIL_InitEditor(void);
 
 // Convert MFC's CString to CTString
-ENGINEGUI_API CTString MfcStringToCT(const CString &str);
+inline CTString MfcStringToCT(const CString &str);
+
+// Define string conversion method
+#include "MfcStringConversion.inl"
 
 #endif

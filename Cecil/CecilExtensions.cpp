@@ -63,39 +63,3 @@ void CECIL_InitEditor(void) {
   pGameLib->GetSymbol_t(&pGameCreateFunc, "GAME_Create");
   NewPatch(pGameCreateFunc, &P_GameCreate, "GAME_Create()");
 };
-
-// Convert MFC's CString to CTString
-CTString MfcStringToCT(const CString &str) {
-#ifndef UNICODE
-  // Return as is
-  return str;
-
-#else
-  const wchar_t *pstrWide = str;
-  INDEX ct = str.GetLength();
-
-  // Create null-terminated ANSI string
-  char *pstrANSI = new char[ct + 1];
-  pstrANSI[ct] = 0;
-
-  // Copy every byte into wide characters
-  while (--ct >= 0) {
-    // Special remappings
-    if (pstrWide[ct] == (wchar_t)0x0178) {
-      pstrANSI[ct] = (char)0x9F;
-
-    } else if (pstrWide[ct] == (wchar_t)0x20AC) {
-      pstrANSI[ct] = (char)0x80;
-
-    // Copy as is
-    } else {
-      pstrANSI[ct] = (char)pstrWide[ct];
-    }
-  }
-  
-  CTString strOut(pstrANSI);
-  delete[] pstrANSI;
-  
-  return strOut;
-#endif
-};
