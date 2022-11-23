@@ -17,11 +17,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <CoreLib/Core.h>
 
 #ifdef ENGINEGUI_EXPORTS
-
   #define ENGINEGUI_API __declspec(dllexport)
 
 #else
-
   #define ENGINEGUI_API __declspec(dllimport)
 
   #ifdef NDEBUG
@@ -29,7 +27,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
   #else
     #pragma comment(lib, "EngineGUID.lib")
   #endif
-
 #endif
 
 class CEngineGUI

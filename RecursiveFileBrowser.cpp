@@ -250,7 +250,7 @@ ENGINEGUI_API FLOAT CEngineGUI::RecursiveFileBrowser(CTFileName fnRootDirectory,
   if (bUseGUI) {
     // stupid way to change resources, but it must be done
     HANDLE hOldResource = AfxGetResourceHandle();
-    AfxSetResourceHandle(GetModuleHandleA(ENGINEGUI_DLL_NAME));
+    AfxSetResourceHandle(GetGuiHandle());
 
     dlgFileBrowser.Create(IDD_RECURSIVE_FILE_BROWSER, NULL);
     dlgFileBrowser.SetWindowText(CString(strWindowTitle));

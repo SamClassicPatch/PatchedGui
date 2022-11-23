@@ -43,7 +43,7 @@ void CEngineGUI::SelectMode(CDisplayMode &dm, GfxAPIType &gat)
   CDlgSelectMode dlgSelectMode(dm, gat);
 
   // activate CTGfx resources
-  AfxSetResourceHandle(GetModuleHandleA(ENGINEGUI_DLL_NAME));
+  AfxSetResourceHandle(GetGuiHandle());
   INDEX iDialogResult = dlgSelectMode.DoModal();
 
   // restore resources
@@ -63,7 +63,7 @@ CTFileName CEngineGUI::CreateTexture(CTFileName fnTexFileToRecreate, CDynamicArr
   HANDLE hOldResource = AfxGetResourceHandle();
 
   // activate CTGfx resources
-  AfxSetResourceHandle(GetModuleHandleA(ENGINEGUI_DLL_NAME));
+  AfxSetResourceHandle(GetGuiHandle());
 
   // if create texture is called with a wish to recreate texture
   if (fnTexFileToRecreate != "") {

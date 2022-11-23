@@ -210,7 +210,7 @@ CTFileName CEngineGUI::FileRequester(
   HANDLE hOldResource = AfxGetResourceHandle();
 
   // activate CTGfx resources
-  AfxSetResourceHandle(GetModuleHandleA(ENGINEGUI_DLL_NAME));
+  AfxSetResourceHandle(GetGuiHandle());
 
   // call multiple file requester
   char chrFiles[2048];
@@ -245,7 +245,7 @@ CTFileName CEngineGUI::FileRequester(
 
   // setup preview dialog
   ofnRequestFiles.lpfnHook = &::FileOpenRequesterHook;
-  ofnRequestFiles.hInstance = GetModuleHandleA(ENGINEGUI_DLL_NAME);
+  ofnRequestFiles.hInstance = GetGuiHandle();
   ofnRequestFiles.lpTemplateName = MAKEINTRESOURCEA(IDD_GFX_FILE_REQUESTER);
 
   // allow multi select

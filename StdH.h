@@ -17,8 +17,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <commdlg.h>
 
 #define ENGINE_INTERNAL 1
-#define ENGINEGUI_EXPORTS 1
-#include <EngineGUI/EngineGUI.h>
+#define ENGINEGUI_EXPORTS
+#include "EngineGUI.h"
 
 #include "Resource.h"
 #include "DlgSelectMode.h"
@@ -28,9 +28,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "DlgCreateAnimatedTexture.h"
 #include "DlgCreateEffectTexture.h"
 
-// this is needed for resource setting
-#ifndef NDEBUG
-  #define ENGINEGUI_DLL_NAME "EngineGUID.dll"
-#else
-  #define ENGINEGUI_DLL_NAME "EngineGUI.dll"
-#endif
+// [Cecil] Get this library's module handle
+inline HMODULE GetGuiHandle(void) {
+  #ifndef NDEBUG
+    return GetModuleHandleA("EngineGUID.dll");
+  #else
+    return GetModuleHandleA("EngineGUI.dll");
+  #endif
+};
