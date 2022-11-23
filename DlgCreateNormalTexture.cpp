@@ -29,6 +29,13 @@ static char THIS_FILE[] = __FILE__;
 
 static BOOL _bWasForced32 = FALSE;
 
+#if SE1_VER >= 150
+  static BOOL _bWasStatic = FALSE;
+  static BOOL _bWasConstant = FALSE;
+  static BOOL _bWasCompressed = FALSE;
+  static BOOL _bWasCompressAlpha = FALSE;
+#endif
+
 // CDlgCreateNormalTexture dialog
 
 CDlgCreateNormalTexture::CDlgCreateNormalTexture(CTFileName fnInputFile, CWnd *pParent)
@@ -38,6 +45,14 @@ CDlgCreateNormalTexture::CDlgCreateNormalTexture(CTFileName fnInputFile, CWnd *p
   m_strCreatedTextureName = _T("");
   m_strSizeInPixels = _T("");
   m_bCreateMipmaps = FALSE;
+  m_bForce32 = FALSE;
+
+  #if SE1_VER >= 150
+    m_bStatic = FALSE;
+    m_bConstant = FALSE;
+    m_bCompressed = FALSE;
+    m_bCompressAlpha = FALSE;
+  #endif
   //}}AFX_DATA_INIT
 
   m_bSourcePictureValid = FALSE;
@@ -53,7 +68,15 @@ CDlgCreateNormalTexture::CDlgCreateNormalTexture(CTFileName fnInputFile, CWnd *p
   // set initial values for create mip maps flag and size for create texture dialog
   m_bCreateMipmaps  = AfxGetApp()->GetProfileInt(_T("Creating textures"), _T("Create mipmaps"), 1);
   m_mexCreatedWidth = AfxGetApp()->GetProfileInt(_T("Creating textures"), _T("Mex width"), -1);
+
   _bWasForced32 = FALSE;
+
+  #if SE1_VER >= 150
+    _bWasStatic = FALSE;
+    _bWasConstant = FALSE;
+    _bWasCompressed = FALSE;
+    _bWasCompressAlpha = FALSE;
+  #endif
 
   try {
     // if can't get picture file information
@@ -87,6 +110,7 @@ CDlgCreateNormalTexture::CDlgCreateNormalTexture(CTFileName fnInputFile, CWnd *p
   try {
     // obtain texture with the same name (if already exists)
     CTextureData *pTD = _pTextureStock->Obtain_t(fnTexFileName);
+    pTD->td_ulFlags &= ~(TEX_STATIC | TEX_CONSTANT); // get rid of in-memory flags
     pTD->Reload();
 
     // now pick up initial number of mip levels
@@ -98,6 +122,13 @@ CDlgCreateNormalTexture::CDlgCreateNormalTexture(CTFileName fnInputFile, CWnd *p
     // remember existing texture's flags
     _bWasForced32 = pTD->td_ulFlags & TEX_32BIT;
 
+    #if SE1_VER >= 150
+      _bWasStatic = pTD->td_ulFlags & TEX_STATIC;
+      _bWasConstant = pTD->td_ulFlags & TEX_CONSTANT;
+      _bWasCompressed = pTD->td_ulFlags & TEX_COMPRESSED;
+      _bWasCompressAlpha = pTD->td_ulFlags & TEX_COMPRESSEDALPHA;
+    #endif
+
     // release texture
     _pTextureStock->Release(pTD);
 
@@ -107,7 +138,21 @@ CDlgCreateNormalTexture::CDlgCreateNormalTexture(CTFileName fnInputFile, CWnd *p
     (void)err_str;
   }
 
+  // update create flags
   m_wndViewCreatedTexture.m_bForce32 = _bWasForced32;
+
+  #if SE1_VER >= 150
+    if (!_bWasCompressed) {
+      ASSERT(!_bWasCompressAlpha);
+    } else {
+      ASSERT(!_bWasForced32);
+    }
+
+    m_wndViewCreatedTexture.m_bStatic = _bWasStatic;
+    m_wndViewCreatedTexture.m_bConstant = _bWasConstant;
+    m_wndViewCreatedTexture.m_bCompressed = _bWasCompressed;
+    m_wndViewCreatedTexture.m_bCompressAlpha = _bWasCompressAlpha;
+  #endif
 
   RefreshCreatedTexture();
 
@@ -126,22 +171,74 @@ CDlgCreateNormalTexture::~CDlgCreateNormalTexture()
   ReleaseCreatedTexture();
 }
 
+void CDlgCreateNormalTexture::SetupMemoryUsage(ULONG ulMemory)
+{
+  CWnd *pwnd = GetDlgItem(IDC_MEMORY_T);
+
+  if (pwnd == NULL || !IsWindow(pwnd->m_hWnd)) {
+    return;
+  }
+
+  TCHAR strText[64];
+
+  #ifdef UNICODE
+    swprintf(strText, L"Used memory: %.1f KB", ulMemory / 1024.0f);
+  #else
+    sprintf(strText, "Used memory: %.1f KB", ulMemory / 1024.0f);
+  #endif
+
+  pwnd->SetWindowText(strText);
+}
+
 void CDlgCreateNormalTexture::RefreshCreatedTexture(void)
 {
   ReleaseCreatedTexture();
 
-  // prepare forced upload quality
-  _iTexForcedQuality = 16;
+  #if SE1_VER >= 150
+    // flags are mutually exclusive
+    if (m_wndViewCreatedTexture.m_bCompressed) {
+      m_wndViewCreatedTexture.m_bForce32 = FALSE;
+    }
+
+    if (m_wndViewCreatedTexture.m_bForce32) {
+      m_wndViewCreatedTexture.m_bCompressed = FALSE;
+    }
+  #endif
+
+  // prepare flags
+  ULONG ulFlags;
 
   if (m_wndViewCreatedTexture.m_bForce32) {
+    ulFlags = TEX_32BIT;
     _iTexForcedQuality = 32;
+
+#if SE1_VER >= 150
+  } else if (m_wndViewCreatedTexture.m_bCompressed) {
+    ulFlags = TEX_COMPRESS;
+
+    if (m_wndViewCreatedTexture.m_bCompressAlpha) {
+      ulFlags |= TEX_COMPRESSALPHA;
+    }
+
+    _iTexForcedQuality = 0;
+#endif
+
+  } else {
+    ulFlags = NONE;
+    _iTexForcedQuality = 16;
   }
 
   // create temporary texture to show how texture will look like
   try {
-    CreateTexture_t(m_fnSourceFileName, CTString("Temp\\Temp.tex"), m_pixSourceWidth, MAX_MEX_LOG2 + 1, FALSE);
+    CWaitCursor wc;
+    #if SE1_VER >= 150
+      CreateTexture_t(m_fnSourceFileName, CTString("Temp\\Temp.tex"), m_pixSourceWidth, MAX_MEX_LOG2 + 1, ulFlags);
+    #else
+      CreateTexture_t(m_fnSourceFileName, CTString("Temp\\Temp.tex"), m_pixSourceWidth, MAX_MEX_LOG2 + 1, (ulFlags & TEX_32BIT) != 0);
+    #endif
     m_ptdCreated = _pTextureStock->Obtain_t(CTString("Temp\\Temp.tex"));
     m_ptdCreated->Reload();
+    m_ptdCreated->Force(TEX_CONSTANT); // don't mess with created textures
 
   } catch (char *err_str) {
     AfxMessageBox(CString(err_str));
@@ -150,6 +247,13 @@ void CDlgCreateNormalTexture::RefreshCreatedTexture(void)
 
   // set texture data to texture preview window so it could show preview picture
   m_wndViewCreatedTexture.m_toTexture.SetData(m_ptdCreated);
+
+  #if SE1_VER >= 150
+    // signal to check-box whether texture has really been compressed
+    if (!m_ptdCreated->IsCompressed()) {
+      m_wndViewCreatedTexture.m_bCompressed = FALSE;
+    }
+  #endif
 }
 
 void CDlgCreateNormalTexture::ReleaseCreatedTexture(void)
@@ -173,15 +277,106 @@ void CDlgCreateNormalTexture::DoDataExchange(CDataExchange *pDX)
   // if dialog is recieving data
   if (pDX->m_bSaveAndValidate == FALSE)
   {
+    // update flags
+    m_bForce32 = m_wndViewCreatedTexture.m_bForce32;
+
+    #if SE1_VER >= 150
+      m_bStatic = m_wndViewCreatedTexture.m_bStatic;
+      m_bConstant = m_wndViewCreatedTexture.m_bConstant;
+      m_bCompressed = m_wndViewCreatedTexture.m_bCompressed;
+      m_bCompressAlpha = m_wndViewCreatedTexture.m_bCompressAlpha;
+
+    #else
+      // [Cecil] Disable new options
+      GetDlgItem(IDC_STATICTEX)->EnableWindow(FALSE);
+      GetDlgItem(IDC_CONSTANT)->EnableWindow(FALSE);
+      GetDlgItem(IDC_COMPRESSED)->EnableWindow(FALSE);
+      GetDlgItem(IDC_COMPRESSALPHA)->EnableWindow(FALSE);
+    #endif
+
+    // determine memory usage
+    SLONG slMemorySize = 0;
+
+    if (m_ptdCreated != NULL) {
+      CTextureData &td = *m_ptdCreated;
+      const BOOL bAlpha = (td.td_ulFlags & TEX_ALPHACHANNEL);
+      const BOOL bGrayScale = (td.td_ulFlags & TEX_GRAY);
+      const BOOL bTransparent = (td.td_ulFlags & TEX_TRANSPARENT);
+      SLONG slSize = td.GetPixWidth() * td.GetPixHeight() * 4; // assume 32-bit by default
+
+      // 32 or 16 bit?
+      SLONG slDiv = m_bForce32 ? 1 : 2;
+
+      if (bGrayScale) {
+        slDiv = bAlpha ? 2 : 4;
+      }
+
+      #if SE1_VER >= 150
+        // in memory?
+        if (m_bStatic) {
+          slMemorySize = slSize * 4 / 3;
+        }
+
+        // compressed (alpha or not)?
+        if (m_bCompressed) {
+          slDiv = bAlpha ? 4 : 8;
+        }
+      #endif
+
+      // add mipmaps?
+      if (m_bCreateMipmaps) {
+        slSize *= 4 / 3;
+      }
+
+      slMemorySize += slSize / slDiv;
+    }
+
+    // printout
+    SetupMemoryUsage(slMemorySize);
+
+    CWnd *pwnd;
+
+    #if SE1_VER >= 150
+      // can compress textures only in Direct3D
+      pwnd = GetDlgItem(IDC_COMPRESSALPHA);
+
+      if (::IsWindow(pwnd->m_hWnd)) {
+        BOOL bEnable = m_bCompressed;
+
+        if (m_ptdCreated != NULL && (!(m_ptdCreated->td_ulFlags & TEX_ALPHACHANNEL) || (m_ptdCreated->td_ulFlags & TEX_TRANSPARENT))) {
+          bEnable = FALSE;
+        }
+
+        pwnd->EnableWindow(bEnable);
+      }
+
+      const BOOL bUncompressed = !m_bCompressed;
+
+    #else
+      const BOOL bUncompressed = TRUE;
+    #endif
+
+    // cannot force to 32-bit compressed textures
+    pwnd = GetDlgItem(IDC_FORCE32);
+
+    if (::IsWindow(pwnd->m_hWnd)) {
+      pwnd->EnableWindow(bUncompressed);
+    }
   }
 
   //{{AFX_DATA_MAP(CDlgCreateNormalTexture)
-  DDX_Control(pDX, IDC_FORCE32, m_ctrlForce32);
   DDX_Control(pDX, IDC_CHEQUERED_ALPHA, m_ctrlCheckButton);
   DDX_Control(pDX, IDC_MEX_SIZE, m_ctrlMexSizeCombo);
   DDX_Text(pDX, IDC_CREATED_TEXTURE_NAME, m_strCreatedTextureName);
   DDX_Text(pDX, IDC_SIZE_IN_PIXELS, m_strSizeInPixels);
   DDX_Check(pDX, IDC_CREATE_MIPMAPS, m_bCreateMipmaps);
+  DDX_Check(pDX, IDC_FORCE32, m_bForce32);
+  #if SE1_VER >= 150
+    DDX_Check(pDX, IDC_STATICTEX, m_bStatic);
+    DDX_Check(pDX, IDC_CONSTANT, m_bConstant);
+    DDX_Check(pDX, IDC_COMPRESSED, m_bCompressed);
+    DDX_Check(pDX, IDC_COMPRESSALPHA, m_bCompressAlpha);
+  #endif
   //}}AFX_DATA_MAP
 
   // if dialog is giving data
@@ -194,9 +389,15 @@ BEGIN_MESSAGE_MAP(CDlgCreateNormalTexture, CDialog)
   //{{AFX_MSG_MAP(CDlgCreateNormalTexture)
   ON_WM_PAINT()
   ON_BN_CLICKED(IDC_CHEQUERED_ALPHA, OnChequeredAlpha)
-  ON_BN_CLICKED(IDC_FORCE32, OnForce32)
   ON_BN_CLICKED(ID_CREATE_TEXTURE, OnCreateTexture)
   ON_BN_CLICKED(IDC_CREATE_MIPMAPS, OnCreateMipmaps)
+  ON_BN_CLICKED(IDC_FORCE32, OnForce32)
+  #if SE1_VER >= 150
+    ON_BN_CLICKED(IDC_STATICTEX, OnStatic)
+    ON_BN_CLICKED(IDC_CONSTANT, OnConstant)
+    ON_BN_CLICKED(IDC_COMPRESSED, OnCompressed)
+    ON_BN_CLICKED(IDC_COMPRESSALPHA, OnCompressAlpha)
+  #endif
   //}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -272,8 +473,13 @@ BOOL CDlgCreateNormalTexture::OnInitDialog()
   m_ctrlCheckButton.SetCheck(1);
 
   // determine correct texture quality
-  m_ctrlForce32.SetCheck(_bWasForced32);
   m_wndViewCreatedTexture.m_bForce32 = _bWasForced32;
+  #if SE1_VER >= 150
+    m_wndViewCreatedTexture.m_bStatic = _bWasStatic;
+    m_wndViewCreatedTexture.m_bConstant = _bWasConstant;
+    m_wndViewCreatedTexture.m_bCompressed = _bWasCompressed;
+    m_wndViewCreatedTexture.m_bCompressAlpha = _bWasCompressAlpha;
+  #endif
 
   // return TRUE unless you set the focus to a control
   return TRUE;
@@ -290,7 +496,43 @@ void CDlgCreateNormalTexture::OnCreateTexture()
 
   // create texture
   try {
-    CreateTexture_t(m_fnSourceFileName, m_fnCreatedFileName, mexWidth, iMipMaps, m_wndViewCreatedTexture.m_bForce32);
+    // prepare flags
+    ULONG ulFlags;
+
+    if (m_wndViewCreatedTexture.m_bForce32) {
+      ulFlags = TEX_32BIT;
+      _iTexForcedQuality = 32;
+
+  #if SE1_VER >= 150
+    } else if (m_wndViewCreatedTexture.m_bCompressed) {
+      ulFlags = TEX_COMPRESS;
+
+      if (m_wndViewCreatedTexture.m_bCompressAlpha) {
+        ulFlags |= TEX_COMPRESSALPHA;
+      }
+
+      _iTexForcedQuality = 0;
+  #endif
+
+    } else {
+      ulFlags = NONE;
+      _iTexForcedQuality = 16;
+    }
+    
+  #if SE1_VER >= 150
+    if (m_wndViewCreatedTexture.m_bStatic) {
+      ulFlags |= TEX_STATIC;
+    }
+
+    if (m_wndViewCreatedTexture.m_bConstant) {
+      ulFlags |= TEX_CONSTANT;
+    }
+
+    CreateTexture_t(m_fnSourceFileName, m_fnCreatedFileName, mexWidth, iMipMaps, ulFlags);
+
+  #else
+    CreateTexture_t(m_fnSourceFileName, m_fnCreatedFileName, mexWidth, iMipMaps, (ulFlags & TEX_32BIT) != 0);
+  #endif
 
   } catch (char *err_str) {
     AfxMessageBox(CString(err_str));
@@ -315,6 +557,7 @@ void CDlgCreateNormalTexture::OnForce32()
   // toggle force32 on/off
   m_wndViewCreatedTexture.m_bForce32 = !m_wndViewCreatedTexture.m_bForce32;
   RefreshCreatedTexture();
+  UpdateData(FALSE);
 }
 
 void CDlgCreateNormalTexture::OnCreateMipmaps()
@@ -322,3 +565,37 @@ void CDlgCreateNormalTexture::OnCreateMipmaps()
   m_bCreateMipmaps = !m_bCreateMipmaps;
   UpdateData(FALSE);
 }
+
+#if SE1_VER >= 150
+
+void CDlgCreateNormalTexture::OnStatic()
+{
+  m_wndViewCreatedTexture.m_bStatic = !m_wndViewCreatedTexture.m_bStatic;
+  UpdateData(FALSE);
+}
+
+void CDlgCreateNormalTexture::OnConstant()
+{
+  m_wndViewCreatedTexture.m_bConstant = !m_wndViewCreatedTexture.m_bConstant;
+  UpdateData(FALSE);
+}
+
+void CDlgCreateNormalTexture::OnCompressed()
+{
+  // toggle compressed on/off
+  m_wndViewCreatedTexture.m_bCompressed = !m_wndViewCreatedTexture.m_bCompressed;
+  m_wndViewCreatedTexture.m_bForce32    = !m_wndViewCreatedTexture.m_bCompressed && m_wndViewCreatedTexture.m_bForce32;
+  RefreshCreatedTexture();
+  UpdateData(FALSE);
+}
+
+void CDlgCreateNormalTexture::OnCompressAlpha()
+{
+  // toggle compressed alpha on/off
+  ASSERT( m_wndViewCreatedTexture.m_bCompressed);
+  m_wndViewCreatedTexture.m_bCompressAlpha = !m_wndViewCreatedTexture.m_bCompressAlpha;
+  RefreshCreatedTexture();
+  UpdateData(FALSE);
+}
+
+#endif

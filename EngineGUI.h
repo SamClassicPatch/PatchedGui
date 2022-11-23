@@ -86,6 +86,16 @@ class CEngineGUI
                                            CDynamicArray<CTFileName> *pafnCreatedTextures = NULL,
                                            BOOL bIfOpen = TRUE);
 
+    // Folder browser
+    ENGINEGUI_API BOOL BrowseForFolder(CTFileName &fnBrowsedFoleder, CTString strDefaultDir,
+                                       char *strWindowTitle = "Choose folder");
+
+    // Recursive file browser
+    // strFileMask can be "*.*" or "*.txt;*.ini;*.log"
+    ENGINEGUI_API FLOAT RecursiveFileBrowser(CTFileName fnRootDirectory, char *strWindowTitle,
+                                             void (*pFileFoundCallback)(CTFileName fnFound),
+                                             CTString strFileMask = "*.*", BOOL bUseGUI = TRUE);
+
     // Call browse texture requester
     ENGINEGUI_API CTFileName BrowseTexture(CTFileName fnDefaultSelected = CTString(""),
                                            char *pchrIniKeyName = KEY_NAME_REQUEST_FILE_DIR,

@@ -41,6 +41,12 @@ CWndDisplayTexture::CWndDisplayTexture()
   m_iTimerID = -1;
   m_bChequeredAlpha = TRUE;
   m_bForce32 = FALSE;
+  #if SE1_VER >= 150
+    m_bStatic = FALSE;
+    m_bConstant = FALSE;
+    m_bCompressed = FALSE;
+    m_bCompressAlpha = FALSE;
+  #endif
   m_bDrawLine = FALSE;
 }
 
@@ -88,8 +94,13 @@ void CWndDisplayTexture::OnPaint()
   BOOL bAlphaChannel = FALSE;
 
   // if there is a valid drawport, and the drawport can be locked
-  if (m_pDrawPort != NULL && m_pDrawPort->Lock())
-  {
+#if SE1_VER < 150
+  if (m_pDrawPort != NULL && m_pDrawPort->Lock()) {
+#else
+  if (m_pDrawPort != NULL) {
+    m_pDrawPort->SetAsCurrent();
+#endif
+
     // if it has any texture
     if (pTD != NULL) {
       PIX pixWidth = pTD->GetPixWidth();
@@ -167,8 +178,10 @@ void CWndDisplayTexture::OnPaint()
       m_pDrawPort->DrawLine(m_pixLineStartU, m_pixLineStartV, m_pixLineStopU, m_pixLineStopV, C_BLACK | CT_OPAQUE, 0x33333333);
     }
 
-    // unlock the drawport
-    m_pDrawPort->Unlock();
+    #if SE1_VER < 150
+      // unlock the drawport
+      m_pDrawPort->Unlock();
+    #endif
 
     // swap if there is a valid viewport
     if (m_pViewPort != NULL) {

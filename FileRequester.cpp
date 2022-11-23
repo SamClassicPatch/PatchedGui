@@ -94,7 +94,10 @@ UINT APIENTRY FileOpenRequesterHook(HWND hdlg, UINT uiMsg, WPARAM wParam, LPARAM
       fnSelectedFileFullPath.RemoveApplicationPath_t();
       CTFileName fnThumbnail = CTString("");
 
-      if (fnSelectedFileFullPath.FileExt() == ".wld" || fnSelectedFileFullPath.FileExt() == ".mdl") {
+      if (fnSelectedFileFullPath.FileExt() == ".wld"
+       || fnSelectedFileFullPath.FileExt() == ".mdl"
+       || fnSelectedFileFullPath.FileExt() == ".smc")
+      {
         fnThumbnail = fnSelectedFileFullPath.FileDir() + fnSelectedFileFullPath.FileName() + ".tbn";
 
       } else if (fnSelectedFileFullPath.FileExt() == ".tex" || fnSelectedFileFullPath.FileExt() == ".tbn") {
@@ -111,7 +114,11 @@ UINT APIENTRY FileOpenRequesterHook(HWND hdlg, UINT uiMsg, WPARAM wParam, LPARAM
 
           // creates new texture with one frame
           CTextureData tdForPictureConverting;
-          tdForPictureConverting.Create_t(&iiImageInfo, iiImageInfo.ii_Width, 1, FALSE);
+          #if SE1_VER < 150
+            tdForPictureConverting.Create_t(&iiImageInfo, iiImageInfo.ii_Width, 1, FALSE);
+          #else
+            tdForPictureConverting.Create_t(&iiImageInfo, iiImageInfo.ii_Width, 1);
+          #endif
           tdForPictureConverting.Save_t(fnThumbnail);
         }
       }
@@ -129,7 +136,13 @@ UINT APIENTRY FileOpenRequesterHook(HWND hdlg, UINT uiMsg, WPARAM wParam, LPARAM
 
     if (IsWindow(_wndThumbnail)) {
       // if there is a valid drawport, and the drawport can be locked
+    #if SE1_VER < 150
       if (_pDrawPort != NULL && _pDrawPort->Lock()) {
+    #else
+      if (_pDrawPort != NULL) {
+        _pDrawPort->SetAsCurrent();
+    #endif
+
         PIXaabbox2D rectPict;
         rectPict = PIXaabbox2D(PIX2D(0, 0), PIX2D(_pDrawPort->GetWidth(), _pDrawPort->GetHeight()));
 
@@ -164,8 +177,10 @@ UINT APIENTRY FileOpenRequesterHook(HWND hdlg, UINT uiMsg, WPARAM wParam, LPARAM
           CWnd::FromHandle(GetDlgItem(hdlg, IDC_THUMBNAIL_DESCRIPTION))->SetWindowText(_T("No thumbnail"));
         }
 
-        // unlock the drawport
-        _pDrawPort->Unlock();
+        #if SE1_VER < 150
+          // unlock the drawport
+          _pDrawPort->Unlock();
+        #endif
       }
 
       // if there is a valid viewport

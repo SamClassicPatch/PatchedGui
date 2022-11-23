@@ -60,6 +60,12 @@ class CWndDisplayTexture : public CWnd
     int m_iTimerID;
     BOOL m_bChequeredAlpha;
     BOOL m_bForce32;
+  #if SE1_VER >= 150
+    BOOL m_bStatic;
+    BOOL m_bConstant;
+    BOOL m_bCompressed;
+    BOOL m_bCompressAlpha;
+  #endif
     FLOAT m_fWndTexRatio;
     PIX m_pixWinWidth;
     PIX m_pixWinHeight;

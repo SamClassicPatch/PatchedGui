@@ -30,6 +30,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #define IDD_CREATE_ANIMATED_TEXTURE     104
 #define IDD_CREATE_NORMAL_TEXTURE       105
 #define IDD_CHOOSE_TEXTURE_TYPE         106
+#define IDD_RECURSIVE_FILE_BROWSER      109
 #define IDD_GFX_FILE_REQUESTER          185
 #define IDC_CURRENT_MODE                1005
 #define IDC_CURRENT_DRIVER              1006
@@ -45,8 +46,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #define IDC_CREATED_TEXTURE_NAME        1020
 #define IDC_CREATE_MIPMAPS              1021
 #define IDC_VIEW_TEXTURE                1022
+#define IDC_COMPRESSED                  1022
 #define IDC_SIZE_IN_PIXELS              1023
 #define IDC_EDIT_SCRIPT                 1024
+#define IDC_COMPRESSALPHA               1024
 #define ID_NORMAL_TEXTURE               1025
 #define IDC_TEXTURE_NAME                1025
 #define ID_ANIMATED_TEXTURE             1026
@@ -66,14 +69,22 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #define IDC_COLOR_DEFAULT               1040
 #define IDC_API                         1041
 #define IDC_RESOLUTIONS                 1042
+#define IDC_CONSTANT                    1042
+#define IDC_STATICTEX                   1043
+#define IDC_MEMORY_T                    1044
+#define IDC_FILE_BEING_PROCESSED        1089
+#define IDC_PROGRESS_BAR                1092
+#define IDC_ELAPSED_TIME                1093
+#define IDC_ESTIMATED_TIME              1094
+#define IDC_PROGRESS_COUNT              1095
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        109
+#define _APS_NEXT_RESOURCE_VALUE        110
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1042
+#define _APS_NEXT_CONTROL_VALUE         1045
 #define _APS_NEXT_SYMED_VALUE           103
 #endif
 #endif

@@ -32,6 +32,7 @@ class CDlgCreateNormalTexture : public CDialog
     ~CDlgCreateNormalTexture();
     void RefreshCreatedTexture(void);
     void ReleaseCreatedTexture(void);
+    void SetupMemoryUsage(ULONG ulMemory);
 
     BOOL m_bSourcePictureValid;
     BOOL m_bPreviewWindowsCreated;
@@ -47,13 +48,19 @@ class CDlgCreateNormalTexture : public CDialog
     // Dialog Data
     //{{AFX_DATA(CDlgCreateNormalTexture)
     enum { IDD = IDD_CREATE_NORMAL_TEXTURE };
-    CButton m_ctrlForce32;
     CButton m_ctrlCheckButton;
     CComboBox m_ctrlNoOfMipMapsCombo;
     CComboBox m_ctrlMexSizeCombo;
     CString m_strCreatedTextureName;
     CString m_strSizeInPixels;
     BOOL m_bCreateMipmaps;
+    BOOL m_bForce32;
+  #if SE1_VER >= 150
+    BOOL m_bStatic;
+    BOOL m_bConstant;
+    BOOL m_bCompressed;
+    BOOL m_bCompressAlpha;
+  #endif
     //}}AFX_DATA
 
   // Overrides
@@ -69,12 +76,18 @@ class CDlgCreateNormalTexture : public CDialog
     //{{AFX_MSG(CDlgCreateNormalTexture)
     afx_msg void OnPaint();
     afx_msg void OnChequeredAlpha();
-    afx_msg void OnForce32();
     virtual BOOL OnInitDialog();
     afx_msg void OnBrowseDetail();
     afx_msg void OnDetailNone();
     afx_msg void OnCreateTexture();
     afx_msg void OnCreateMipmaps();
+    afx_msg void OnForce32();
+  #if SE1_VER >= 150
+    afx_msg void OnStatic();
+    afx_msg void OnConstant();
+    afx_msg void OnCompressed();
+    afx_msg void OnCompressAlpha();
+  #endif
     //}}AFX_MSG
     DECLARE_MESSAGE_MAP()
 };

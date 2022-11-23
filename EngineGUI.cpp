@@ -67,9 +67,9 @@ CTFileName CEngineGUI::CreateTexture(CTFileName fnTexFileToRecreate, CDynamicArr
 
   // if create texture is called with a wish to recreate texture
   if (fnTexFileToRecreate != "") {
-    fnResult = fnTexFileToRecreate;
+    fnResult = CTString("");
     CTextureData *ptdTextureToRecreate;
-    CTFileName fnToRecreateNoExt = fnTexFileToRecreate.FileDir() + fnTexFileToRecreate.FileName();
+    CTFileName fnToRecreateNoExt = fnTexFileToRecreate.NoExt();
 
     try {
       // obtain texture to recreate
@@ -80,44 +80,39 @@ CTFileName CEngineGUI::CreateTexture(CTFileName fnTexFileToRecreate, CDynamicArr
       if (ptdTextureToRecreate->td_ptegEffect != NULL) {
         // call create effect texture dialog with .tex name
         CDlgCreateEffectTexture dlgCreateEffectTexture(fnTexFileToRecreate);
-        dlgCreateEffectTexture.DoModal();
+        const INDEX iResult = dlgCreateEffectTexture.DoModal();
+
+        if (iResult == IDOK) {
+          fnResult = fnTexFileToRecreate;
+        }
 
       // else this texture was created from script or from single picture
       } else {
-        // search for script with same name
-        CTString strFullNameNoExt = _fnmApplicationPath + fnTexFileToRecreate.FileDir() + fnTexFileToRecreate.FileName();
-
-        // if there is tga picture with same name
-        if (GetFileAttributesA(strFullNameNoExt + ".tga") != -1) {
+        if (FileExists(fnToRecreateNoExt + ".tga")) {
           // call create normal texture dialog with tga picture name
           CDlgCreateNormalTexture dlgCreateNormalTexture(fnToRecreateNoExt + ".tga");
 
           if (dlgCreateNormalTexture.m_bSourcePictureValid) {
-            if (dlgCreateNormalTexture.DoModal() == IDOK) {
-              fnResult = dlgCreateNormalTexture.m_fnCreatedFileName;
-            }
-          }
+            const INDEX iResult = dlgCreateNormalTexture.DoModal();
 
-        // else if there is pcx picture with same name
-        } else if (GetFileAttributesA(strFullNameNoExt + ".pcx") != -1) {
-          // call create normal texture dialog with tga picture name
-          CDlgCreateNormalTexture dlgCreateNormalTexture(fnToRecreateNoExt + ".pcx");
-
-          if (dlgCreateNormalTexture.m_bSourcePictureValid) {
-            if (dlgCreateNormalTexture.DoModal() == IDOK) {
+            if (iResult == IDOK) {
               fnResult = dlgCreateNormalTexture.m_fnCreatedFileName;
             }
           }
 
         // else if script exists
-        } else if (GetFileAttributesA(strFullNameNoExt + ".scr") != -1) {
+        } else if (FileExists(fnToRecreateNoExt + ".scr")) {
           CDynamicArray<CTFileName> afnScript;
           CTFileName *pfnScript = afnScript.New();
           *pfnScript = fnToRecreateNoExt + ".scr";
 
           // call create animated texture dialog with script name
           CDlgCreateAnimatedTexture dlgCreateAnimatedTexture(afnScript);
-          dlgCreateAnimatedTexture.DoModal();
+          const INDEX iResult = dlgCreateAnimatedTexture.DoModal();
+
+          if (iResult == IDOK) {
+            fnResult = dlgCreateAnimatedTexture.m_fnCreatedFileName;
+          }
 
         } else {
           // not found!
