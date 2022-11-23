@@ -22,10 +22,10 @@ void CECIL_InitTools(void) {
 
   // Function patches
   CPutString("--- Tools: Intercepting Engine functions ---\n");
-
-  extern void CECIL_ApplyModelRenderPatch(void);
-  CECIL_ApplyModelRenderPatch();
-
+  {
+    extern void CECIL_ApplyModelRenderPatch(void);
+    CECIL_ApplyModelRenderPatch();
+  }
   CPutString("--- Done! ---\n");
 
   // Load needed plugins
@@ -54,6 +54,13 @@ static CGame *P_GameCreate(void) {
 void CECIL_InitEditor(void) {
   // Initialize the core
   CECIL_InitCore();
+
+  // Function patches
+  CPutString("--- Editor: Intercepting Engine functions ---\n");
+  {
+    _EnginePatches.CorePatches();
+  }
+  CPutString("--- Done! ---\n");
 
   // Load Game library in advance
   const CTString strGameLib = GetAPI()->GetGameLibPath();
