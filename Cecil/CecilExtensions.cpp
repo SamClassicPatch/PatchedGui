@@ -37,6 +37,9 @@ static CGame *(*pGameCreateFunc)(void) = NULL;
 
 // Patched GAME_Create() method
 static CGame *P_GameCreate(void) {
+  // Create plugin metadata for the Game library
+  GetAPI()->LoadGamePlugin();
+
   // Call original method and retrieve a pointer to created CGame
   _pGame = (*pGameCreateFunc)();
 
