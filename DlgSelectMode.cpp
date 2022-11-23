@@ -181,7 +181,7 @@ CDlgSelectMode::CDlgSelectMode(CDisplayMode &dm, enum GfxAPIType &gfxAPI, CWnd *
     case GAT_D3D:
       m_strCurrentDriver = "Direct3D";
       break;
-#endif // SE1_D3D
+#endif
 
     default:
       m_strCurrentDriver = "none";
@@ -275,10 +275,11 @@ void CDlgSelectMode::DoDataExchange(CDataExchange *pDX)
 #ifdef SE1_D3D
     i = m_ctrlDriverCombo.AddString(_T("Direct3D"));
     m_ctrlDriverCombo.SetItemData(i, (INDEX)GAT_D3D);
+
     if (*m_pGfxAPI == GAT_D3D) {
       iSelect = i;
     }
-#endif // SE1_D3D
+#endif
 
     // set old driver to be default
     m_ctrlDriverCombo.SetCurSel(iSelect);

@@ -255,11 +255,11 @@ void CEngineGUI::GetFullScreenModeFromRegistry(CTString strSectionName, CDisplay
 
   strResult = AfxGetApp()->GetProfileString(CString(strSectionName), _T("Full screen API"), _T("OpenGL"));
 
-#ifdef SE1_D3D
-  gat = (strResult == "Direct3D") ? GAT_D3D : GAT_OGL;
-#else // SE1_D3D
-  gat = GAT_OGL;
-#endif // SE1_D3D
+  #ifdef SE1_D3D
+    gat = (strResult == "Direct3D") ? GAT_D3D : GAT_OGL;
+  #else
+    gat = GAT_OGL;
+  #endif
 
   // [Cecil] Custom initialization
   CECIL_InitEditor();
@@ -269,11 +269,11 @@ void CEngineGUI::SetFullScreenModeToRegistry(CTString strSectionName, CDisplayMo
 {
   CTString strDM(0, "%d x %d x %d", dm.dm_pixSizeI, dm.dm_pixSizeJ, dm.dm_ddDepth);
 
-#ifdef SE1_D3D
-  CTString strGAT = (gat == GAT_D3D) ? "Direct3D" : "OpenGL";
-#else // SE1_D3D
-  CTString strGAT = "OpenGL";
-#endif // SE1_D3D
+  #ifdef SE1_D3D
+    CTString strGAT = (gat == GAT_D3D) ? "Direct3D" : "OpenGL";
+  #else
+    CTString strGAT = "OpenGL";
+  #endif
 
   AfxGetApp()->WriteProfileString(CString(strSectionName), _T("Full screen mode"), CString(strDM));
   AfxGetApp()->WriteProfileString(CString(strSectionName), _T("Full screen API"), CString(strGAT));
