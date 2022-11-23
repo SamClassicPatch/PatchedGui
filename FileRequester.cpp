@@ -94,10 +94,10 @@ UINT APIENTRY FileOpenRequesterHook(HWND hdlg, UINT uiMsg, WPARAM wParam, LPARAM
       fnSelectedFileFullPath.RemoveApplicationPath_t();
       CTFileName fnThumbnail = CTString("");
 
-      if ((fnSelectedFileFullPath.FileExt() == ".wld") || (fnSelectedFileFullPath.FileExt() == ".mdl")) {
+      if (fnSelectedFileFullPath.FileExt() == ".wld" || fnSelectedFileFullPath.FileExt() == ".mdl") {
         fnThumbnail = fnSelectedFileFullPath.FileDir() + fnSelectedFileFullPath.FileName() + ".tbn";
 
-      } else if ((fnSelectedFileFullPath.FileExt() == ".tex") || (fnSelectedFileFullPath.FileExt() == ".tbn")) {
+      } else if (fnSelectedFileFullPath.FileExt() == ".tex" || fnSelectedFileFullPath.FileExt() == ".tbn") {
         fnThumbnail = fnSelectedFileFullPath;
 
       } else if (fnSelectedFileFullPath.FileExt() == ".pcx" || fnSelectedFileFullPath.FileExt() == ".tga") {
@@ -129,7 +129,7 @@ UINT APIENTRY FileOpenRequesterHook(HWND hdlg, UINT uiMsg, WPARAM wParam, LPARAM
 
     if (IsWindow(_wndThumbnail)) {
       // if there is a valid drawport, and the drawport can be locked
-      if ((_pDrawPort != NULL) && (_pDrawPort->Lock())) {
+      if (_pDrawPort != NULL && _pDrawPort->Lock()) {
         PIXaabbox2D rectPict;
         rectPict = PIXaabbox2D(PIX2D(0, 0), PIX2D(_pDrawPort->GetWidth(), _pDrawPort->GetHeight()));
 
@@ -201,8 +201,8 @@ CTFileName CEngineGUI::FileRequester(
   char chrFiles[2048];
   OPENFILENAMEA ofnRequestFiles;
 
-  memset(&ofnRequestFiles, 0, sizeof(OPENFILENAME));
-  ofnRequestFiles.lStructSize = sizeof(OPENFILENAME);
+  memset(&ofnRequestFiles, 0, sizeof(OPENFILENAMEA));
+  ofnRequestFiles.lStructSize = sizeof(OPENFILENAMEA);
   ofnRequestFiles.hwndOwner = AfxGetMainWnd()->m_hWnd;
   ofnRequestFiles.lpstrFilter = pchrFilters;
   ofnRequestFiles.lpstrFile = chrFiles;

@@ -31,7 +31,7 @@ static BOOL _bWasForced32 = FALSE;
 
 // CDlgCreateNormalTexture dialog
 
-CDlgCreateNormalTexture::CDlgCreateNormalTexture(CTFileName fnInputFile, CWnd *pParent /*=NULL*/)
+CDlgCreateNormalTexture::CDlgCreateNormalTexture(CTFileName fnInputFile, CWnd *pParent)
   : CDialog(CDlgCreateNormalTexture::IDD, pParent)
 {
   //{{AFX_DATA_INIT(CDlgCreateNormalTexture)
@@ -68,7 +68,7 @@ CDlgCreateNormalTexture::CDlgCreateNormalTexture(CTFileName fnInputFile, CWnd *p
     m_pixSourceWidth = iiImageInfo.ii_Width;
     m_pixSourceHeight = iiImageInfo.ii_Height;
 
-    // test if dimensions are at power of 2
+    // test if dimensions are potentions of 2
     if ((((1 << ((int)Log2(m_pixSourceWidth))) != m_pixSourceWidth))
      || (((1 << ((int)Log2(m_pixSourceHeight))) != m_pixSourceHeight))) {
       ThrowF_t("Picture %s has wrong dimensions (%d,%d).\n"
@@ -107,11 +107,7 @@ CDlgCreateNormalTexture::CDlgCreateNormalTexture(CTFileName fnInputFile, CWnd *p
     (void)err_str;
   }
 
-  m_wndViewCreatedTexture.m_bForce32 = FALSE;
-
-  if (_bWasForced32) {
-    m_wndViewCreatedTexture.m_bForce32 = TRUE;
-  }
+  m_wndViewCreatedTexture.m_bForce32 = _bWasForced32;
 
   RefreshCreatedTexture();
 
@@ -251,8 +247,8 @@ BOOL CDlgCreateNormalTexture::OnInitDialog()
     MEX mexPotentionWidth = m_pixSourceWidth * (1 << iPotention);
     MEX mexPotentionHeight = m_pixSourceHeight * (1 << iPotention);
 
-    if ((mexPotentionWidth > MAX_ALLOWED_MEX_SIZE)
-     || (mexPotentionHeight > MAX_ALLOWED_MEX_SIZE)) {
+    if (mexPotentionWidth > MAX_ALLOWED_MEX_SIZE
+     || mexPotentionHeight > MAX_ALLOWED_MEX_SIZE) {
       break;
     }
 
@@ -276,13 +272,8 @@ BOOL CDlgCreateNormalTexture::OnInitDialog()
   m_ctrlCheckButton.SetCheck(1);
 
   // determine correct texture quality
-  if (_bWasForced32) {
-    m_ctrlForce32.SetCheck(1);
-    m_wndViewCreatedTexture.m_bForce32 = TRUE;
-  } else {
-    m_ctrlForce32.SetCheck(0);
-    m_wndViewCreatedTexture.m_bForce32 = FALSE;
-  }
+  m_ctrlForce32.SetCheck(_bWasForced32);
+  m_wndViewCreatedTexture.m_bForce32 = _bWasForced32;
 
   // return TRUE unless you set the focus to a control
   return TRUE;
@@ -308,7 +299,7 @@ void CDlgCreateNormalTexture::OnCreateTexture()
 
   AfxGetApp()->WriteProfileInt(_T("Creating textures"), _T("Create mipmaps"), m_bCreateMipmaps);
   AfxGetApp()->WriteProfileInt(_T("Creating textures"), _T("Mex width"), mexWidth);
-  // end dialog
+
   EndDialog(IDOK);
 }
 

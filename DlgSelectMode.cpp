@@ -145,7 +145,7 @@ static void ShowTestModeScreen(CDrawPort *pDP, CViewPort *pVP)
 
 // CDlgSelectMode dialog
 
-CDlgSelectMode::CDlgSelectMode(CDisplayMode &dm, enum GfxAPIType &gfxAPI, CWnd *pParent /*=NULL*/)
+CDlgSelectMode::CDlgSelectMode(CDisplayMode &dm, enum GfxAPIType &gfxAPI, CWnd *pParent)
   : CDialog(CDlgSelectMode::IDD, pParent)
 {
   // obtain all available modes

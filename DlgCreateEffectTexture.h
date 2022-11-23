@@ -28,7 +28,7 @@ class CDlgCreateEffectTexture : public CDialog
 {
   // Construction
   public:
-    CDlgCreateEffectTexture(CTFileName fnInputFile = CTString(""), CWnd* pParent = NULL); // standard constructor
+    CDlgCreateEffectTexture(CTFileName fnInputFile = CTString(""), CWnd *pParent = NULL); // standard constructor
     ~CDlgCreateEffectTexture(); // standard destructor
     void SetNewBaseTexture(CTFileName fnNewBase);
     void SelectPixSizeCombo(void);

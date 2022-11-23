@@ -120,6 +120,7 @@ CTFileName CEngineGUI::CreateTexture(CTFileName fnTexFileToRecreate, CDynamicArr
           dlgCreateAnimatedTexture.DoModal();
 
         } else {
+          // not found!
           WarningMessage("Cannot find source for recreating texture: \"%s\"", (CTString &)fnTexFileToRecreate);
         }
       }
@@ -131,16 +132,18 @@ CTFileName CEngineGUI::CreateTexture(CTFileName fnTexFileToRecreate, CDynamicArr
       _pTextureStock->Release(ptdTextureToRecreate);
 
     } catch (char *err_str) {
+      // not loaded!
       WarningMessage(err_str);
     }
 
+  // create, not recreate
   } else {
     // call choose texture type dialog
     CDlgChooseTextureType dlgChooseTextureType;
     int iDlgResult = dlgChooseTextureType.DoModal();
 
     // if user choosed a texture type
-    if ((iDlgResult != -1) && (iDlgResult >= 0) && (iDlgResult <= 2)) {
+    if (iDlgResult != -1 && iDlgResult >= 0 && iDlgResult <= 2) {
       // if result is 2 we want to create effect texture
       if (iDlgResult == 2) {
         // no file requester, just call dialog
@@ -190,7 +193,7 @@ CTFileName CEngineGUI::CreateTexture(CTFileName fnTexFileToRecreate, CDynamicArr
           FOREACHINDYNAMICARRAY(afnCreateTexture, CTFileName, itPicture) {
             CTFileName fnSource = itPicture.Current();
 
-            if ((fnSource.FileExt() == ".pcx") || (fnSource.FileExt() == ".tga")) {
+            if (fnSource.FileExt() == ".pcx" || fnSource.FileExt() == ".tga") {
               // call create normal texture dialog
               CDlgCreateNormalTexture dlgCreateNormalTexture(fnSource);
 

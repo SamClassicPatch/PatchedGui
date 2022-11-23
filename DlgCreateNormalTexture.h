@@ -42,7 +42,7 @@ class CDlgCreateNormalTexture : public CDialog
     CTFileName m_fnCreatedFileName;
     CWndDisplayTexture m_wndViewDetailTexture;
     CWndDisplayTexture m_wndViewCreatedTexture;
-    CTextureData* m_ptdCreated;
+    CTextureData *m_ptdCreated;
 
     // Dialog Data
     //{{AFX_DATA(CDlgCreateNormalTexture)

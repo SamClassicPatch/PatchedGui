@@ -26,6 +26,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 static char THIS_FILE[] = __FILE__;
 #endif
 
+// CWndDisplayTexture
+
 TIME timeLastTick;
 
 CWndDisplayTexture::CWndDisplayTexture()
@@ -72,8 +74,9 @@ void CWndDisplayTexture::OnPaint()
     CPaintDC dc(this);
   }
 
-  if (m_iTimerID == -1)
+  if (m_iTimerID == -1) {
     m_iTimerID = (int)SetTimer(1, 50, NULL);
+  }
 
   if (m_pViewPort == NULL && m_pDrawPort == NULL) {
     // initialize canvas for active texture button
@@ -219,7 +222,7 @@ void CWndDisplayTexture::OnDestroy()
   }
 
   KillTimer(m_iTimerID);
-  _pTimer->SetCurrentTick(0);
+  _pTimer->SetCurrentTick(0.0f);
 
   CWnd::OnDestroy();
 }
