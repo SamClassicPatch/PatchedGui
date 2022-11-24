@@ -314,7 +314,7 @@ void CDlgCreateNormalTexture::DoDataExchange(CDataExchange *pDX)
       #if SE1_VER >= 150
         // in memory?
         if (m_bStatic) {
-          slMemorySize = slSize * 4 / 3;
+          slMemorySize = slSize * (4.0f / 3.0f);
         }
 
         // compressed (alpha or not)?
@@ -325,7 +325,7 @@ void CDlgCreateNormalTexture::DoDataExchange(CDataExchange *pDX)
 
       // add mipmaps?
       if (m_bCreateMipmaps) {
-        slSize *= 4 / 3;
+        slSize *= 4.0f / 3.0f;
       }
 
       slMemorySize += slSize / slDiv;
