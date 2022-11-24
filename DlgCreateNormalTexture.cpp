@@ -28,10 +28,10 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 static BOOL _bWasForced32 = FALSE;
+static BOOL _bWasStatic = FALSE;
+static BOOL _bWasConstant = FALSE;
 
 #if SE1_VER >= 150
-  static BOOL _bWasStatic = FALSE;
-  static BOOL _bWasConstant = FALSE;
   static BOOL _bWasCompressed = FALSE;
   static BOOL _bWasCompressAlpha = FALSE;
 #endif
@@ -46,10 +46,10 @@ CDlgCreateNormalTexture::CDlgCreateNormalTexture(CTFileName fnInputFile, CWnd *p
   m_strSizeInPixels = _T("");
   m_bCreateMipmaps = FALSE;
   m_bForce32 = FALSE;
+  m_bStatic = FALSE;
+  m_bConstant = FALSE;
 
   #if SE1_VER >= 150
-    m_bStatic = FALSE;
-    m_bConstant = FALSE;
     m_bCompressed = FALSE;
     m_bCompressAlpha = FALSE;
   #endif
@@ -70,10 +70,10 @@ CDlgCreateNormalTexture::CDlgCreateNormalTexture(CTFileName fnInputFile, CWnd *p
   m_mexCreatedWidth = AfxGetApp()->GetProfileInt(_T("Creating textures"), _T("Mex width"), -1);
 
   _bWasForced32 = FALSE;
+  _bWasStatic = FALSE;
+  _bWasConstant = FALSE;
 
   #if SE1_VER >= 150
-    _bWasStatic = FALSE;
-    _bWasConstant = FALSE;
     _bWasCompressed = FALSE;
     _bWasCompressAlpha = FALSE;
   #endif
@@ -121,10 +121,10 @@ CDlgCreateNormalTexture::CDlgCreateNormalTexture(CTFileName fnInputFile, CWnd *p
 
     // remember existing texture's flags
     _bWasForced32 = pTD->td_ulFlags & TEX_32BIT;
+    _bWasStatic = pTD->td_ulFlags & TEX_STATIC;
+    _bWasConstant = pTD->td_ulFlags & TEX_CONSTANT;
 
     #if SE1_VER >= 150
-      _bWasStatic = pTD->td_ulFlags & TEX_STATIC;
-      _bWasConstant = pTD->td_ulFlags & TEX_CONSTANT;
       _bWasCompressed = pTD->td_ulFlags & TEX_COMPRESSED;
       _bWasCompressAlpha = pTD->td_ulFlags & TEX_COMPRESSEDALPHA;
     #endif
@@ -140,6 +140,8 @@ CDlgCreateNormalTexture::CDlgCreateNormalTexture(CTFileName fnInputFile, CWnd *p
 
   // update create flags
   m_wndViewCreatedTexture.m_bForce32 = _bWasForced32;
+  m_wndViewCreatedTexture.m_bStatic = _bWasStatic;
+  m_wndViewCreatedTexture.m_bConstant = _bWasConstant;
 
   #if SE1_VER >= 150
     if (!_bWasCompressed) {
@@ -148,8 +150,6 @@ CDlgCreateNormalTexture::CDlgCreateNormalTexture(CTFileName fnInputFile, CWnd *p
       ASSERT(!_bWasForced32);
     }
 
-    m_wndViewCreatedTexture.m_bStatic = _bWasStatic;
-    m_wndViewCreatedTexture.m_bConstant = _bWasConstant;
     m_wndViewCreatedTexture.m_bCompressed = _bWasCompressed;
     m_wndViewCreatedTexture.m_bCompressAlpha = _bWasCompressAlpha;
   #endif
@@ -278,17 +278,15 @@ void CDlgCreateNormalTexture::DoDataExchange(CDataExchange *pDX)
   {
     // update flags
     m_bForce32 = m_wndViewCreatedTexture.m_bForce32;
+    m_bStatic = m_wndViewCreatedTexture.m_bStatic;
+    m_bConstant = m_wndViewCreatedTexture.m_bConstant;
 
     #if SE1_VER >= 150
-      m_bStatic = m_wndViewCreatedTexture.m_bStatic;
-      m_bConstant = m_wndViewCreatedTexture.m_bConstant;
       m_bCompressed = m_wndViewCreatedTexture.m_bCompressed;
       m_bCompressAlpha = m_wndViewCreatedTexture.m_bCompressAlpha;
 
     #else
       // [Cecil] Disable new options
-      GetDlgItem(IDC_STATICTEX)->EnableWindow(FALSE);
-      GetDlgItem(IDC_CONSTANT)->EnableWindow(FALSE);
       GetDlgItem(IDC_COMPRESSED)->EnableWindow(FALSE);
       GetDlgItem(IDC_COMPRESSALPHA)->EnableWindow(FALSE);
     #endif
@@ -310,12 +308,12 @@ void CDlgCreateNormalTexture::DoDataExchange(CDataExchange *pDX)
         slDiv = bAlpha ? 2 : 4;
       }
 
-      #if SE1_VER >= 150
-        // in memory?
-        if (m_bStatic) {
-          slMemorySize = slSize * (4.0f / 3.0f);
-        }
+      // in memory?
+      if (m_bStatic) {
+        slMemorySize = slSize * (4.0f / 3.0f);
+      }
 
+      #if SE1_VER >= 150
         // compressed (alpha or not)?
         if (m_bCompressed) {
           slDiv = bAlpha ? 4 : 8;
@@ -370,9 +368,9 @@ void CDlgCreateNormalTexture::DoDataExchange(CDataExchange *pDX)
   DDX_Text(pDX, IDC_SIZE_IN_PIXELS, m_strSizeInPixels);
   DDX_Check(pDX, IDC_CREATE_MIPMAPS, m_bCreateMipmaps);
   DDX_Check(pDX, IDC_FORCE32, m_bForce32);
+  DDX_Check(pDX, IDC_STATICTEX, m_bStatic);
+  DDX_Check(pDX, IDC_CONSTANT, m_bConstant);
   #if SE1_VER >= 150
-    DDX_Check(pDX, IDC_STATICTEX, m_bStatic);
-    DDX_Check(pDX, IDC_CONSTANT, m_bConstant);
     DDX_Check(pDX, IDC_COMPRESSED, m_bCompressed);
     DDX_Check(pDX, IDC_COMPRESSALPHA, m_bCompressAlpha);
   #endif
@@ -391,9 +389,9 @@ BEGIN_MESSAGE_MAP(CDlgCreateNormalTexture, CDialog)
   ON_BN_CLICKED(ID_CREATE_TEXTURE, OnCreateTexture)
   ON_BN_CLICKED(IDC_CREATE_MIPMAPS, OnCreateMipmaps)
   ON_BN_CLICKED(IDC_FORCE32, OnForce32)
+  ON_BN_CLICKED(IDC_STATICTEX, OnStatic)
+  ON_BN_CLICKED(IDC_CONSTANT, OnConstant)
   #if SE1_VER >= 150
-    ON_BN_CLICKED(IDC_STATICTEX, OnStatic)
-    ON_BN_CLICKED(IDC_CONSTANT, OnConstant)
     ON_BN_CLICKED(IDC_COMPRESSED, OnCompressed)
     ON_BN_CLICKED(IDC_COMPRESSALPHA, OnCompressAlpha)
   #endif
@@ -473,9 +471,9 @@ BOOL CDlgCreateNormalTexture::OnInitDialog()
 
   // determine correct texture quality
   m_wndViewCreatedTexture.m_bForce32 = _bWasForced32;
+  m_wndViewCreatedTexture.m_bStatic = _bWasStatic;
+  m_wndViewCreatedTexture.m_bConstant = _bWasConstant;
   #if SE1_VER >= 150
-    m_wndViewCreatedTexture.m_bStatic = _bWasStatic;
-    m_wndViewCreatedTexture.m_bConstant = _bWasConstant;
     m_wndViewCreatedTexture.m_bCompressed = _bWasCompressed;
     m_wndViewCreatedTexture.m_bCompressAlpha = _bWasCompressAlpha;
   #endif
@@ -517,8 +515,7 @@ void CDlgCreateNormalTexture::OnCreateTexture()
       ulFlags = NONE;
       _iTexForcedQuality = 16;
     }
-    
-  #if SE1_VER >= 150
+
     if (m_wndViewCreatedTexture.m_bStatic) {
       ulFlags |= TEX_STATIC;
     }
@@ -526,7 +523,6 @@ void CDlgCreateNormalTexture::OnCreateTexture()
     if (m_wndViewCreatedTexture.m_bConstant) {
       ulFlags |= TEX_CONSTANT;
     }
-  #endif
 
     // [Cecil] Supply flags to the texture creation
     P_CreateTextureOut(m_fnSourceFileName, m_fnCreatedFileName, mexWidth, iMipMaps, ulFlags);
@@ -563,8 +559,6 @@ void CDlgCreateNormalTexture::OnCreateMipmaps()
   UpdateData(FALSE);
 }
 
-#if SE1_VER >= 150
-
 void CDlgCreateNormalTexture::OnStatic()
 {
   m_wndViewCreatedTexture.m_bStatic = !m_wndViewCreatedTexture.m_bStatic;
@@ -576,6 +570,8 @@ void CDlgCreateNormalTexture::OnConstant()
   m_wndViewCreatedTexture.m_bConstant = !m_wndViewCreatedTexture.m_bConstant;
   UpdateData(FALSE);
 }
+
+#if SE1_VER >= 150
 
 void CDlgCreateNormalTexture::OnCompressed()
 {

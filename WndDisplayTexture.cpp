@@ -41,9 +41,9 @@ CWndDisplayTexture::CWndDisplayTexture()
   m_iTimerID = -1;
   m_bChequeredAlpha = TRUE;
   m_bForce32 = FALSE;
+  m_bStatic = FALSE;
+  m_bConstant = FALSE;
   #if SE1_VER >= 150
-    m_bStatic = FALSE;
-    m_bConstant = FALSE;
     m_bCompressed = FALSE;
     m_bCompressAlpha = FALSE;
   #endif

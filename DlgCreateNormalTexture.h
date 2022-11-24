@@ -55,9 +55,9 @@ class CDlgCreateNormalTexture : public CDialog
     CString m_strSizeInPixels;
     BOOL m_bCreateMipmaps;
     BOOL m_bForce32;
-  #if SE1_VER >= 150
     BOOL m_bStatic;
     BOOL m_bConstant;
+  #if SE1_VER >= 150
     BOOL m_bCompressed;
     BOOL m_bCompressAlpha;
   #endif
@@ -82,9 +82,9 @@ class CDlgCreateNormalTexture : public CDialog
     afx_msg void OnCreateTexture();
     afx_msg void OnCreateMipmaps();
     afx_msg void OnForce32();
-  #if SE1_VER >= 150
     afx_msg void OnStatic();
     afx_msg void OnConstant();
+  #if SE1_VER >= 150
     afx_msg void OnCompressed();
     afx_msg void OnCompressAlpha();
   #endif
