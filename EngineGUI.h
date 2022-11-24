@@ -17,6 +17,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <CoreLib/Core.h>
 #include <EnginePatches/Patches.h>
 
+// [Cecil] Use patched textures
+#include <EnginePatches/Patches/Textures.h>
+
 #ifdef ENGINEGUI_EXPORTS
   #define ENGINEGUI_API __declspec(dllexport)
 

@@ -113,12 +113,8 @@ UINT APIENTRY FileOpenRequesterHook(HWND hdlg, UINT uiMsg, WPARAM wParam, LPARAM
           fnThumbnail = CTString("Temp\\Temp.tex");
 
           // creates new texture with one frame
-          CTextureData tdForPictureConverting;
-          #if SE1_VER < 150
-            tdForPictureConverting.Create_t(&iiImageInfo, iiImageInfo.ii_Width, 1, FALSE);
-          #else
-            tdForPictureConverting.Create_t(&iiImageInfo, iiImageInfo.ii_Width, 1);
-          #endif
+          CTexDataPatch tdForPictureConverting; // [Cecil] Patched
+          tdForPictureConverting.P_Create(&iiImageInfo, iiImageInfo.ii_Width, 1, NONE);
           tdForPictureConverting.Save_t(fnThumbnail);
         }
       }

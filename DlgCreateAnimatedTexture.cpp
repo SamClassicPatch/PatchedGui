@@ -97,8 +97,8 @@ void CDlgCreateAnimatedTexture::RefreshTexture(void)
     fileScript.Close();
     FreeMemory(pScript);
 
-    // process script
-    ProcessScript_t(fnTempScript);
+    // [Cecil] Patched script processing
+    P_ProcessTextureScript(fnTempScript);
 
     // release old texture if it exists and obtain new texture
     ReleaseCreatedTexture();

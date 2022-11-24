@@ -231,11 +231,10 @@ void CDlgCreateNormalTexture::RefreshCreatedTexture(void)
   // create temporary texture to show how texture will look like
   try {
     CWaitCursor wc;
-    #if SE1_VER >= 150
-      CreateTexture_t(m_fnSourceFileName, CTString("Temp\\Temp.tex"), m_pixSourceWidth, MAX_MEX_LOG2 + 1, ulFlags);
-    #else
-      CreateTexture_t(m_fnSourceFileName, CTString("Temp\\Temp.tex"), m_pixSourceWidth, MAX_MEX_LOG2 + 1, (ulFlags & TEX_32BIT) != 0);
-    #endif
+
+    // [Cecil] Supply flags to the texture creation
+    P_CreateTextureOut(m_fnSourceFileName, CTString("Temp\\Temp.tex"), m_pixSourceWidth, MAX_MEX_LOG2 + 1, ulFlags);
+
     m_ptdCreated = _pTextureStock->Obtain_t(CTString("Temp\\Temp.tex"));
     m_ptdCreated->Reload();
     m_ptdCreated->Force(TEX_CONSTANT); // don't mess with created textures
@@ -527,12 +526,10 @@ void CDlgCreateNormalTexture::OnCreateTexture()
     if (m_wndViewCreatedTexture.m_bConstant) {
       ulFlags |= TEX_CONSTANT;
     }
-
-    CreateTexture_t(m_fnSourceFileName, m_fnCreatedFileName, mexWidth, iMipMaps, ulFlags);
-
-  #else
-    CreateTexture_t(m_fnSourceFileName, m_fnCreatedFileName, mexWidth, iMipMaps, (ulFlags & TEX_32BIT) != 0);
   #endif
+
+    // [Cecil] Supply flags to the texture creation
+    P_CreateTextureOut(m_fnSourceFileName, m_fnCreatedFileName, mexWidth, iMipMaps, ulFlags);
 
   } catch (char *err_str) {
     AfxMessageBox(CString(err_str));
