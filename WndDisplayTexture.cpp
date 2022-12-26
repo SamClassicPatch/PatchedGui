@@ -43,7 +43,7 @@ CWndDisplayTexture::CWndDisplayTexture()
   m_bForce32 = FALSE;
   m_bStatic = FALSE;
   m_bConstant = FALSE;
-  #if SE1_VER >= 150
+  #if SE1_VER >= SE1_150
     m_bCompressed = FALSE;
     m_bCompressAlpha = FALSE;
   #endif
@@ -94,7 +94,7 @@ void CWndDisplayTexture::OnPaint()
   BOOL bAlphaChannel = FALSE;
 
   // if there is a valid drawport, and the drawport can be locked
-#if SE1_VER < 150
+#if SE1_VER < SE1_150
   if (m_pDrawPort != NULL && m_pDrawPort->Lock()) {
 #else
   if (m_pDrawPort != NULL) {
@@ -178,7 +178,7 @@ void CWndDisplayTexture::OnPaint()
       m_pDrawPort->DrawLine(m_pixLineStartU, m_pixLineStartV, m_pixLineStopU, m_pixLineStopV, C_BLACK | CT_OPAQUE, 0x33333333);
     }
 
-    #if SE1_VER < 150
+    #if SE1_VER < SE1_150
       // unlock the drawport
       m_pDrawPort->Unlock();
     #endif

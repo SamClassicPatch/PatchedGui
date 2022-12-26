@@ -37,7 +37,7 @@ static void DrawGradient(CDrawPort *pDP, COLOR colStart, COLOR colEnd, PIX pixI0
 static void ShowTestModeScreen(CDrawPort *pDP, CViewPort *pVP)
 {
   // try to lock draw port
-  #if SE1_VER < 150
+  #if SE1_VER < SE1_150
     if (!pDP->Lock()) {
       return;
     }
@@ -140,7 +140,7 @@ static void ShowTestModeScreen(CDrawPort *pDP, CViewPort *pVP)
   pDP->PutTextC(strTestMessage, 1.0f / 2 * dpWidth + 2, 1.0f / 2 * dpHeight + 2, C_dGRAY | CT_OPAQUE);
   pDP->PutTextC(strTestMessage, 1.0f / 2 * dpWidth, 1.0f / 2 * dpHeight, C_WHITE | CT_OPAQUE);
 
-  #if SE1_VER < 150
+  #if SE1_VER < SE1_150
     // unlock draw port
     pDP->Unlock();
   #endif

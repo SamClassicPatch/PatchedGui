@@ -62,7 +62,7 @@ class CWndDisplayTexture : public CWnd
     BOOL m_bForce32;
     BOOL m_bStatic;
     BOOL m_bConstant;
-  #if SE1_VER >= 150
+  #if SE1_VER >= SE1_150
     BOOL m_bCompressed;
     BOOL m_bCompressAlpha;
   #endif

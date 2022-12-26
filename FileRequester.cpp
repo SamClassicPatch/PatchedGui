@@ -132,7 +132,7 @@ UINT APIENTRY FileOpenRequesterHook(HWND hdlg, UINT uiMsg, WPARAM wParam, LPARAM
 
     if (IsWindow(_wndThumbnail)) {
       // if there is a valid drawport, and the drawport can be locked
-    #if SE1_VER < 150
+    #if SE1_VER < SE1_150
       if (_pDrawPort != NULL && _pDrawPort->Lock()) {
     #else
       if (_pDrawPort != NULL) {
@@ -173,7 +173,7 @@ UINT APIENTRY FileOpenRequesterHook(HWND hdlg, UINT uiMsg, WPARAM wParam, LPARAM
           CWnd::FromHandle(GetDlgItem(hdlg, IDC_THUMBNAIL_DESCRIPTION))->SetWindowText(_T("No thumbnail"));
         }
 
-        #if SE1_VER < 150
+        #if SE1_VER < SE1_150
           // unlock the drawport
           _pDrawPort->Unlock();
         #endif

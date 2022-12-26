@@ -57,7 +57,7 @@ class CDlgCreateNormalTexture : public CDialog
     BOOL m_bForce32;
     BOOL m_bStatic;
     BOOL m_bConstant;
-  #if SE1_VER >= 150
+  #if SE1_VER >= SE1_150
     BOOL m_bCompressed;
     BOOL m_bCompressAlpha;
   #endif
@@ -84,7 +84,7 @@ class CDlgCreateNormalTexture : public CDialog
     afx_msg void OnForce32();
     afx_msg void OnStatic();
     afx_msg void OnConstant();
-  #if SE1_VER >= 150
+  #if SE1_VER >= SE1_150
     afx_msg void OnCompressed();
     afx_msg void OnCompressAlpha();
   #endif
