@@ -308,7 +308,7 @@ BOOL CDlgCreateAnimatedTexture::OnInitDialog()
 
       // copy script to edit ctrl
       m_strEditScript = CTString(pchrFile);
-      delete pchrFile;
+      delete[] pchrFile;
 
     // catch errors
     } catch (char *strError) {
