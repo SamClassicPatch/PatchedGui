@@ -99,7 +99,7 @@ static void P_EndMdlRendering(BOOL bRestoreOrtho) {
 };
 
 // SKA methods are only available in SE1.07 and newer
-#if SE1_VER > SE1_105
+#if SE1_VER >= SE1_107
 
 // Patched beginning of skeletal (SKA) mesh rendering
 static void P_BeginSkaRendering(CAnyProjection3D &apr, CDrawPort *pdp) {
@@ -138,7 +138,7 @@ extern void CECIL_ApplyModelRenderPatch(void) {
   NewPatch(pMdlEndFunc, &P_EndMdlRendering, "::EndModelRenderingView(...)");
 
   // SKA rendering methods
-  #if SE1_VER > SE1_105
+  #if SE1_VER >= SE1_107
     pSkaBeginFunc = &RM_BeginRenderingView;
     NewPatch(pSkaBeginFunc, &P_BeginSkaRendering, "::RM_BeginRenderingView(...)");
 
