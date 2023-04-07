@@ -58,12 +58,14 @@ void CECIL_InitEditor(void) {
   // Initialize the core
   CECIL_InitCore();
 
+#if CLASSICSPATCH_ENGINEPATCHES
+
   // Function patches
   CPutString("--- Editor: Intercepting Engine functions ---\n");
-  {
-    _EnginePatches.CorePatches();
-  }
+  _EnginePatches.CorePatches();
   CPutString("--- Done! ---\n");
+
+#endif // CLASSICSPATCH_ENGINEPATCHES
 
   // Load Game library in advance
   const CTString strGameLib = GetAPI()->GetGameLibPath();
