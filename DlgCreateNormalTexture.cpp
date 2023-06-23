@@ -84,7 +84,7 @@ CDlgCreateNormalTexture::CDlgCreateNormalTexture(CTFileName fnInputFile, CWnd *p
 
     if (iiImageInfo.GetGfxFileInfo_t(m_fnSourceFileName) == UNSUPPORTED_FILE) {
       // throw error
-      ThrowF_t("File '%s' has unsupported file format", (CTString &)(_fnmApplicationPath + m_fnSourceFileName));
+      ThrowF_t("File '%s' has unsupported file format", (CCoreAPI::AppPath() + m_fnSourceFileName).str_String);
     }
 
     // get dimensions

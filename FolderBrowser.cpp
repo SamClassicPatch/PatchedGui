@@ -49,7 +49,7 @@ static int CALLBACK BrowseCallbackProc(HWND hwnd, UINT uMsg, LPARAM lp, LPARAM p
 // Folder browse
 ENGINEGUI_API BOOL CEngineGUI::BrowseForFolder(CTFileName &fnBrowsedFolder, CTString strDefaultDir, char *strWindowTitle)
 {
-  CTString strFullRootDir = _fnmApplicationPath + strDefaultDir;
+  CTString strFullRootDir = CCoreAPI::AppPath() + strDefaultDir;
 
   BROWSEINFOA biBrowse;
   memset(&biBrowse, 0, sizeof(BROWSEINFO));
