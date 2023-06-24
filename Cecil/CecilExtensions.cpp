@@ -68,7 +68,7 @@ void CECIL_InitEditor(void) {
 #endif // CLASSICSPATCH_ENGINEPATCHES
 
   // Load Game library in advance
-  const CTString strGameLib = GetAPI()->GetGameLibPath();
+  const CTString strGameLib = CCoreAPI::FullLibPath("Game" + _strModExt);
   CPluginModule *pGameLib = GetPluginAPI()->LoadPlugin_t(strGameLib);
 
   // Patch game creation method to avoid creation of multiple instances of CGame
