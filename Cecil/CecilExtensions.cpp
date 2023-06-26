@@ -29,7 +29,7 @@ void CECIL_InitTools(void) {
   CPutString("--- Done! ---\n");
 
   // Load needed plugins
-  GetAPI()->LoadPlugins(CPluginAPI::PF_TOOLS);
+  GetAPI()->LoadPlugins(PLF_TOOLS);
 };
 
 // Original function pointer
@@ -37,9 +37,6 @@ static CGame *(*pGameCreateFunc)(void) = NULL;
 
 // Patched GAME_Create() method
 static CGame *P_GameCreate(void) {
-  // Create plugin metadata for the Game library
-  GetAPI()->LoadGamePlugin();
-
   // Call original method and retrieve a pointer to created CGame
   _pGame = (*pGameCreateFunc)();
 
@@ -47,7 +44,7 @@ static CGame *P_GameCreate(void) {
   GetGameAPI()->HookFields();
 
   // Load needed plugins after the Game library
-  GetAPI()->LoadPlugins(CPluginAPI::PF_EDITOR);
+  GetAPI()->LoadPlugins(PLF_EDITOR);
 
   // Return it
   return _pGame;
@@ -68,8 +65,7 @@ void CECIL_InitEditor(void) {
 #endif // CLASSICSPATCH_ENGINEPATCHES
 
   // Load Game library in advance
-  const CTString strGameLib = CCoreAPI::FullLibPath("Game" + _strModExt);
-  CPluginModule *pGameLib = GetPluginAPI()->LoadPlugin_t(strGameLib);
+  CPluginModule *pGameLib = GetAPI()->LoadGamePlugin();
 
   // Patch game creation method to avoid creation of multiple instances of CGame
   pGameLib->GetSymbol_t(&pGameCreateFunc, "GAME_Create");
