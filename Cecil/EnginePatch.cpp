@@ -25,21 +25,15 @@ static CPatch *_pEndEnginePatch = NULL;
 
 // Patched SE_InitEngine() method
 static void P_InitEngine(CTString strGameID) {
+  // Setup Serious Editor or modelling application
+  CCoreAPI::Setup(strGameID == "SeriousEditor" ? CCoreAPI::APP_EDITOR : CCoreAPI::APP_MODELER);
+
   // Initialize Serious Engine
   (*pInitEngineFunc)(strGameID);
 
-  // Running Serious Modeler or Serious SKA Studio
+  // Initialize the tools
   if (strGameID == "") {
-    // Mark as a modeler application
-    CCoreAPI::Setup(CCoreAPI::APP_MODELER);
-
-    // Initialize the tools
     CECIL_InitTools();
-
-  // Running Serious Editor
-  } else if (strGameID == "SeriousEditor") {
-    // Mark as an editor application
-    CCoreAPI::Setup(CCoreAPI::APP_EDITOR);
   }
 
   // Unpatch initialization method

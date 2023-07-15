@@ -19,7 +19,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 CTString MfcStringToCT(const CString &str) {
 #ifndef UNICODE
   // Return as is
-  return str;
+  return (LPCSTR)str;
 
 #else
   const wchar_t *pstrWide = str;
