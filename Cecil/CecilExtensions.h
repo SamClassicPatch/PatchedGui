@@ -21,10 +21,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #endif
 
 // Custom initialization for other tools
-void CECIL_InitTools(void);
+void ClassicsPatch_InitTools(void);
 
 // Custom initialization for Serious Editor
-void CECIL_InitEditor(void);
+void ClassicsPatch_InitEditor(void);
 
 // Convert MFC's CString to CTString
 inline CTString MfcStringToCT(const CString &str);

@@ -126,7 +126,7 @@ static void P_EndSkaRendering(BOOL bRestoreOrtho) {
 
 #endif
 
-extern void CECIL_ApplyModelRenderPatch(void) {
+void ClassicsPatch_ModelRenderPatches(void) {
   // MDL rendering methods
   pMdlSetupFunc = &CModelObject::SetupModelRendering;
   NewPatch(pMdlSetupFunc, &CModelObjectPatch::P_SetupModelRendering, "CModelObject::SetupModelRendering(...)");

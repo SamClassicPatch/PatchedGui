@@ -262,7 +262,7 @@ void CEngineGUI::GetFullScreenModeFromRegistry(CTString strSectionName, CDisplay
   #endif
 
   // [Cecil] Custom initialization
-  CECIL_InitEditor();
+  ClassicsPatch_InitEditor();
 }
 
 void CEngineGUI::SetFullScreenModeToRegistry(CTString strSectionName, CDisplayMode dm, GfxAPIType gat)

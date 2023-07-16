@@ -33,7 +33,7 @@ static void P_InitEngine(CTString strGameID) {
 
   // Initialize the tools
   if (strGameID == "") {
-    CECIL_InitTools();
+    ClassicsPatch_InitTools();
   }
 
   // Unpatch initialization method
@@ -44,7 +44,7 @@ static void P_InitEngine(CTString strGameID) {
 // Patched SE_EndEngine() method
 static void P_EndEngine(void) {
   // Clean up the core
-  CECIL_EndCore();
+  ClassicsPatch_EndCore();
 
   // End Serious Engine
   (*pEndEngineFunc)();
