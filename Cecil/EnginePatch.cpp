@@ -28,6 +28,14 @@ static void P_InitEngine(CTString strGameID) {
   // Setup Serious Editor or modelling application
   CCoreAPI::Setup(strGameID == "SeriousEditor" ? CCoreAPI::APP_EDITOR : CCoreAPI::APP_MODELER);
 
+#if CLASSICSPATCH_ENGINEPATCHES
+  // Optional patches for full integration into vanilla applications
+  if (CCoreAPI::Props().bFullAppIntegration) {
+    _EnginePatches.FileSystem();
+    _EnginePatches.UnpageStreams();
+  }
+#endif
+
   // Initialize Serious Engine
   (*pInitEngineFunc)(strGameID);
 
