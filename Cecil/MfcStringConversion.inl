@@ -29,24 +29,12 @@ CTString MfcStringToCT(const CString &str) {
   char *pstrANSI = new char[ct + 1];
   pstrANSI[ct] = 0;
 
-  // Copy every byte into wide characters
-  while (--ct >= 0) {
-    // Special remappings
-    if (pstrWide[ct] == (wchar_t)0x0178) {
-      pstrANSI[ct] = (char)0x9F;
+  // Convert Unicode string to system locale (ANSI code page)
+  WideCharToMultiByte(CP_ACP, 0, pstrWide, -1, pstrANSI, ct, NULL, NULL);
 
-    } else if (pstrWide[ct] == (wchar_t)0x20AC) {
-      pstrANSI[ct] = (char)0x80;
-
-    // Copy as is
-    } else {
-      pstrANSI[ct] = (char)pstrWide[ct];
-    }
-  }
-  
   CTString strOut(pstrANSI);
   delete[] pstrANSI;
-  
+
   return strOut;
 #endif
 };
