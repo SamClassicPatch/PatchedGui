@@ -243,11 +243,11 @@ void CDlgCreateAnimatedTexture::OnCreateTexture()
   RefreshTexture();
 
   // prepare names for temporary script and texture
-  CTFileName fnFullTempTexture = CCoreAPI::AppPath() + CTString(TEMPORARY_TEXTURE_NAME);
-  CTFileName fnFullTempScript = CCoreAPI::AppPath() + CTString(TEMPORARY_SCRIPT_NAME);
+  CTFileName fnFullTempTexture = IDir::AppPath() + CTString(TEMPORARY_TEXTURE_NAME);
+  CTFileName fnFullTempScript = IDir::AppPath() + CTString(TEMPORARY_SCRIPT_NAME);
 
   // and for supposed final texture name
-  CTFileName fnFullFinalTexture = CCoreAPI::AppPath() + m_fnCreatedFileName;
+  CTFileName fnFullFinalTexture = IDir::AppPath() + m_fnCreatedFileName;
 
   CTFileName fnSaveName;
 
@@ -275,7 +275,7 @@ void CDlgCreateAnimatedTexture::OnCreateTexture()
   }
 
   // set newly picked names for final script and texture
-  fnFullFinalTexture = CCoreAPI::AppPath() + fnSaveName;
+  fnFullFinalTexture = IDir::AppPath() + fnSaveName;
   CTFileName fnFullFinalScript = fnFullFinalTexture.FileDir() + fnFullFinalTexture.FileName() + ".scr";
 
   // copy temporary script and texture files into real their place
@@ -324,7 +324,7 @@ BOOL CDlgCreateAnimatedTexture::OnInitDialog()
 
       if (iiImageInfo.GetGfxFileInfo_t(m_fnSourceFileName) == UNSUPPORTED_FILE) {
         // throw error
-        ThrowF_t("File '%s' has unsupported file format", (CCoreAPI::AppPath() + m_fnSourceFileName).str_String);
+        ThrowF_t("File '%s' has unsupported file format", (IDir::AppPath() + m_fnSourceFileName).str_String);
       }
 
       // get dimensions

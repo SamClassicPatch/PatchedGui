@@ -221,18 +221,18 @@ CTFileName CEngineGUI::FileRequester(
   sprintf(chrFiles, "%s", strFileSelectedByDefault);
   ofnRequestFiles.nMaxFile = 2048;
 
-  CString strRequestInDirectory = CCoreAPI::AppPath() + strDefaultDir;
+  CString strRequestInDirectory = IDir::AppPath() + strDefaultDir;
 
   if (pchrRegistry != NULL) {
-    strRequestInDirectory = AfxGetApp()->GetProfileString(_T("Scape"), CString(pchrRegistry), CString(CCoreAPI::AppPath() + strDefaultDir));
+    strRequestInDirectory = AfxGetApp()->GetProfileString(_T("Scape"), CString(pchrRegistry), CString(IDir::AppPath() + strDefaultDir));
   }
 
   // if directory is not inside engine dir
   CTString strTest = MfcStringToCT(strRequestInDirectory);
 
-  if (!strTest.RemovePrefix(CCoreAPI::AppPath())) {
+  if (!strTest.RemovePrefix(IDir::AppPath())) {
     // force it there
-    strRequestInDirectory = CCoreAPI::AppPath();
+    strRequestInDirectory = IDir::AppPath();
   }
 
   ofnRequestFiles.lpstrInitialDir = MfcStringToCT(strRequestInDirectory);

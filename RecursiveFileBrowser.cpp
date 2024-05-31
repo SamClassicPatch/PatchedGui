@@ -94,7 +94,7 @@ static void RecursiveListFiles(const CTFileName &fnBrowseDir)
   }
 
   // Browse all directories in current directory
-  CTString strDirMask = CCoreAPI::AppPath() + fnBrowseDir + "*";
+  CTString strDirMask = IDir::AppPath() + fnBrowseDir + "*";
 
   // find first file
   WIN32_FIND_DATAA wfdDirData;
@@ -137,7 +137,7 @@ static void RecursiveListFiles(const CTFileName &fnBrowseDir)
   }
 
   // Browse all files in current directory
-  CTString strFileMask = CCoreAPI::AppPath() + fnBrowseDir + "*";
+  CTString strFileMask = IDir::AppPath() + fnBrowseDir + "*";
 
   WIN32_FIND_DATAA wfdFileData;
   HANDLE hFileHandle = FindFirstFileA(strFileMask, &wfdFileData);
