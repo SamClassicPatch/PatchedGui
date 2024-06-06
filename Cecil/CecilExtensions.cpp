@@ -18,7 +18,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 // Custom initialization for other tools
 void ClassicsPatch_InitTools(void) {
   // Initialize the core
-  ClassicsPatch_InitCore();
+  ClassicsPatch_Init();
 
   // Function patches
   CPutString("--- Tools: Intercepting Engine functions ---\n");
@@ -29,7 +29,7 @@ void ClassicsPatch_InitTools(void) {
   CPutString("--- Done! ---\n");
 
   // Load needed plugins
-  GetAPI()->LoadPlugins(PLF_TOOLS);
+  GetPluginAPI()->LoadPlugins(k_EPluginFlagTools);
 };
 
 // Original function pointer
@@ -44,7 +44,7 @@ static CGame *P_GameCreate(void) {
   GetGameAPI()->HookFields();
 
   // Load needed plugins after the Game library
-  GetAPI()->LoadPlugins(PLF_EDITOR);
+  GetPluginAPI()->LoadPlugins(k_EPluginFlagEditor);
 
   // Return it
   return _pGame;
@@ -53,21 +53,21 @@ static CGame *P_GameCreate(void) {
 // Custom initialization for Serious Editor
 void ClassicsPatch_InitEditor(void) {
   // Initialize the core
-  ClassicsPatch_InitCore();
+  ClassicsPatch_Init();
 
-#if CLASSICSPATCH_ENGINEPATCHES
+#if _PATCHCONFIG_ENGINEPATCHES
 
   // Function patches
   CPutString("--- Editor: Intercepting Engine functions ---\n");
   _EnginePatches.CorePatches();
   CPutString("--- Done! ---\n");
 
-#endif // CLASSICSPATCH_ENGINEPATCHES
+#endif // _PATCHCONFIG_ENGINEPATCHES
 
   // Load Game library in advance
-  CPluginModule *pGameLib = GetAPI()->LoadGamePlugin();
+  CPluginModule *pGameLib = GetPluginAPI()->LoadGamePlugin();
 
   // Patch game creation method to avoid creation of multiple instances of CGame
   pGameLib->GetSymbol_t(&pGameCreateFunc, "GAME_Create");
-  NewPatch(pGameCreateFunc, &P_GameCreate, "GAME_Create()");
+  CreatePatch(pGameCreateFunc, &P_GameCreate, "GAME_Create()");
 };

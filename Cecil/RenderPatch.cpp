@@ -91,7 +91,7 @@ static void P_EndMdlRendering(BOOL bRestoreOrtho) {
 
   // Call API after rendering the model
   if (_pdpAfterModel != NULL) {
-    GetAPI()->OnFrame(_pdpAfterModel);
+    IHooks::OnFrame(_pdpAfterModel);
   }
 
   // Reset render space
@@ -117,7 +117,7 @@ static void P_EndSkaRendering(BOOL bRestoreOrtho) {
 
   // Call API after rendering the model
   if (_pdpAfterModel != NULL) {
-    GetAPI()->OnFrame(_pdpAfterModel);
+    IHooks::OnFrame(_pdpAfterModel);
   }
 
   // Reset render space
@@ -129,20 +129,20 @@ static void P_EndSkaRendering(BOOL bRestoreOrtho) {
 void ClassicsPatch_ModelRenderPatches(void) {
   // MDL rendering methods
   pMdlSetupFunc = &CModelObject::SetupModelRendering;
-  NewPatch(pMdlSetupFunc, &CModelObjectPatch::P_SetupModelRendering, "CModelObject::SetupModelRendering(...)");
+  CreatePatch(pMdlSetupFunc, &CModelObjectPatch::P_SetupModelRendering, "CModelObject::SetupModelRendering(...)");
 
   pMdlBeginFunc = &BeginModelRenderingView;
-  NewPatch(pMdlBeginFunc, &P_BeginMdlRendering, "::BeginModelRenderingView(...)");
+  CreatePatch(pMdlBeginFunc, &P_BeginMdlRendering, "::BeginModelRenderingView(...)");
 
   pMdlEndFunc = &EndModelRenderingView;
-  NewPatch(pMdlEndFunc, &P_EndMdlRendering, "::EndModelRenderingView(...)");
+  CreatePatch(pMdlEndFunc, &P_EndMdlRendering, "::EndModelRenderingView(...)");
 
   // SKA rendering methods
   #if SE1_VER >= SE1_107
     pSkaBeginFunc = &RM_BeginRenderingView;
-    NewPatch(pSkaBeginFunc, &P_BeginSkaRendering, "::RM_BeginRenderingView(...)");
+    CreatePatch(pSkaBeginFunc, &P_BeginSkaRendering, "::RM_BeginRenderingView(...)");
 
     pSkaEndFunc = &RM_EndRenderingView;
-    NewPatch(pSkaEndFunc, &P_EndSkaRendering, "::RM_EndRenderingView(...)");
+    CreatePatch(pSkaEndFunc, &P_EndSkaRendering, "::RM_EndRenderingView(...)");
   #endif
 };

@@ -20,17 +20,17 @@ static void (*pInitEngineFunc)(CTString) = NULL;
 static void (*pEndEngineFunc)(void) = NULL;
 
 // Engine patches
-static CPatch *_pInitEnginePatch = NULL;
-static CPatch *_pEndEnginePatch = NULL;
+static HFuncPatch _hInitEnginePatch = NULL;
+static HFuncPatch _hEndEnginePatch = NULL;
 
 // Patched SE_InitEngine() method
 static void P_InitEngine(CTString strGameID) {
   // Setup Serious Editor or modelling application
-  CCoreAPI::Setup(strGameID == "SeriousEditor" ? CCoreAPI::APP_EDITOR : CCoreAPI::APP_MODELER);
+  ClassicsPatch_Setup(strGameID == "SeriousEditor" ? k_EClassicsPatchAppType_Editor : k_EClassicsPatchAppType_Modeler);
 
-#if CLASSICSPATCH_ENGINEPATCHES
+#if _PATCHCONFIG_ENGINEPATCHES
   // Optional patches for full integration into vanilla applications
-  if (CCoreAPI::Props().bFullAppIntegration) {
+  if (IConfig::global[k_EConfigProps_FullAppIntegration]) {
     _EnginePatches.FileSystem();
     _EnginePatches.UnpageStreams();
   }
@@ -45,14 +45,14 @@ static void P_InitEngine(CTString strGameID) {
   }
 
   // Unpatch initialization method
-  delete _pInitEnginePatch;
-  _pInitEnginePatch = NULL;
+  DestroyPatch(_hInitEnginePatch);
+  _hInitEnginePatch = NULL;
 };
 
 // Patched SE_EndEngine() method
 static void P_EndEngine(void) {
   // Clean up the core
-  ClassicsPatch_EndCore();
+  ClassicsPatch_Shutdown();
 
   // End Serious Engine
   (*pEndEngineFunc)();
@@ -64,9 +64,9 @@ static const struct LibInit {
   {
     // Patch engine methods
     pInitEngineFunc = &SE_InitEngine;
-    _pInitEnginePatch = NewRawPatch(pInitEngineFunc, &P_InitEngine, "SE_InitEngine(...)");
+    _hInitEnginePatch = CreatePatch(pInitEngineFunc, &P_InitEngine, "SE_InitEngine(...)");
 
     pEndEngineFunc = &SE_EndEngine;
-    _pEndEnginePatch = NewRawPatch(pEndEngineFunc, &P_EndEngine, "SE_EndEngine()");
+    _hEndEnginePatch = CreatePatch(pEndEngineFunc, &P_EndEngine, "SE_EndEngine()");
   };
 } _libInit;
