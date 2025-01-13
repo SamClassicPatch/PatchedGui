@@ -118,4 +118,9 @@
       <Filter>Wizard Files</Filter>
     </CustomBuild>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Cecil\MfcStringConversion.inl">
+      <Filter>Header Files\Cecil headers</Filter>
+    </None>
+  </ItemGroup>
 </Project>

@@ -72,6 +72,9 @@
       <FileType>Document</FileType>
     </CustomBuild>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Cecil\MfcStringConversion.inl" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <SccProjectName>
     </SccProjectName>
